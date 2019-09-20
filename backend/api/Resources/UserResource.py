@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from sqlalchemy import or_
 
 from app import bcrypt
-from api.Model import db, User, UserSchema, Image
+from api.Model import db, User, UserSchema, Image, Post
 
 from api.Validations.Auth import hasPermissionByToken, getJWTEncode
 from api.Validations.MustHaveId import mustHaveId
@@ -133,20 +133,24 @@ class UserResource(Resource):
     @hasPermissionByToken(['admin'], False, 'User')
     @mustHaveId
     def delete(self, id=None):
-        user = User.query.filter_by(id=id).first()
-        if user:
-            try:
-                db.session.delete(user)
-                db.session.commit()
-                return {
-                    'message': 'Usuário deletado com sucesso',
-                    'id': id
-                }, 200
-            except:
-                db.session.rollback()
-                return {'message': 'Erro ao conectar com o banco de dados'}, 501
+        post = Post.query.filter_by(user_id=id).first()
+        if not post:
+            user = User.query.filter_by(id=id).first()
+            if user:
+                try:
+                    db.session.delete(user)
+                    db.session.commit()
+                    return {
+                        'message': 'Usuário deletado com sucesso',
+                        'id': id
+                    }, 200
+                except:
+                    db.session.rollback()
+                    return {'message': 'Erro ao conectar com o banco de dados'}, 501
+            else:
+                return {'message': 'Usuário não encontrado'}, 404
         else:
-            return {'message': 'Usuário não encontrado'}, 404
+            return {'message': 'O usuário não pode ser deletado pois possui posts relacionados a ele'}, 501
 
 
 
