@@ -1,11 +1,8 @@
 from flask import  request
-import datetime
-from datetime import date
 from flask_restful import Resource, reqparse
 from sqlalchemy import or_, and_
-
+from datetime import date, datetime
 from api.Model import db, Post, PostSchema, User
-
 from api.Validations.Auth import hasPermissionByToken, getJWTEncode, getJWTDecoded
 from api.Validations.MustHaveId import mustHaveId
 from api.Validations.PostValidations import PostValidation

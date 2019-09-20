@@ -10,11 +10,7 @@ class ConfigurationResource(Resource):
         if config:
             config = config_schema.dump(config)
             return config, 200
-        return {
-            'error': True,
-            'code': '101',
-            'message': 'Dados ainda não cadastrados'
-        }, 400
+        return {'message': 'Dados ainda não cadastrados'}, 404
 
 
     def post(self):
@@ -43,11 +39,7 @@ def manageConfiguration():
                 'message': 'Dados salvos com sucesso'
             }, 200
         except:
-            return {
-                'error': True,
-                'code': '101',
-                'message': 'Error ao conectar como banco de dados'
-            }, 501
+            return {'message': 'Erro ao conectar com o banco de dados'}, 501
     else:
         try:
             config = Configuration('add', '2222-4444', 'add@email.com')
@@ -63,12 +55,8 @@ def manageConfiguration():
             config = config_schema.dump(config)
             return {
                 'configuration': config,
-                'message': 'Dados cirados com sucesso'
+                'message': 'Configurações salvas com sucesso'
             }, 201
         except:
             db.session.rollback()
-            return {
-                'error': True,
-                'code': '101',
-                'message': 'Error ao conectar como banco de dados'
-            }, 501
+            return {'message': 'Erro ao conectar com o banco de dados'}, 501

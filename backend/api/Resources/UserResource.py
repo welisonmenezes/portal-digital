@@ -1,11 +1,9 @@
 from flask import request
 from flask_restful import Resource, reqparse
 from sqlalchemy import or_
-
 from app import bcrypt
 from api.Model import db, User, UserSchema, Image, Post
-
-from api.Validations.Auth import hasPermissionByToken, getJWTEncode
+from api.Validations.Auth import hasPermissionByToken
 from api.Validations.MustHaveId import mustHaveId
 from api.Validations.UserValidations import UserValidation
 

@@ -1,7 +1,5 @@
 import re
-import datetime
-from datetime import date
-
+from datetime import date, datetime
 from api.Utils import getBase64Size
 
 class Validators():
@@ -9,56 +7,69 @@ class Validators():
     # percorre todas as validações necessários
     def isValid(self, currentResult=None):
 
+        # percorre campos necessários
         for field in self.fields:
             if not self.validateReqFields(field):
                 return False
                 break
-
+        
+        # se não é update
         if not currentResult:
+            # percorre campos obrigatórios
             for field in self.requiredFields:
                 if not self.validateRequired(field[0], field[1]):
                     return False
                     break
-
+            
+            # percorre campos únicos
             for field in self.uniqueFields:
                 if not self.validateUnique(field[0], field[1]):
                     return False
                     break
+        # se é update
         else:
+            # percorre campos obrigatórios
             for field in self.requiredFields:
                 if not self.validateRequiredToUpdate(field[0], field[1]):
                     return False
                     break
-
+            
+            # percorre campos únicos
             for field in self.uniqueFields:
                 if not self.validateUniqueToUpdate(field[0], field[1], currentResult):
                     return False
                     break
-
+        
+        # percorre campos numéricos
         for field in self.numberFields:
             if not self.validateNumber(field[0], field[1]):
                 return False
                 break
-
+        
+        # percorre campos de email
         for field in self.emailFields:
             if not self.validateEmail(field[0], field[1]):
                 return False
                 break
-        
+            
+        # percorre campos de chave estrangeira
         for field in self.foreignFields:
             if not self.validateForeignField(field):
                 return False
                 break
-
+        
+        # percorre campos de data
         for field in self.dateFields:
             if not self.validateDate(field):
                 return False
                 break
         
+        # verifica datas
         if self.dateCompareFields:
             if not self.compareDates(self.dateCompareFields):
                 return False
         
+        # percorre campos de imagem
         for field in self.imageFields:
             if not self.validateImageType(field) or not self.validateImageSize(field):
                 return False
@@ -216,6 +227,7 @@ class Validators():
             return False
 
 
+    # verifica se o tipo do arquivo é uma imagem válida
     def validateImageType(self, field):
         baseType = re.search('data:image/(.+?);base64,', self.req[field])
         if (baseType and ( baseType.group(1) == 'png' or
@@ -228,6 +240,7 @@ class Validators():
             return False
 
 
+    # verfifica se o tamanho do arquivo é válido
     def validateImageSize(self, field):
         if (int(getBase64Size(self.req[field])) <= int(5017969)):
             return True

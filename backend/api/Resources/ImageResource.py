@@ -1,16 +1,9 @@
 from flask import  request
 from flask_restful import Resource
-import sys
-import base64
-import re
-
 from api.Model import db, Image, ImageSchema, User, Post, Configuration, ConfigurationImage
-
-from api.Validations.Auth import hasPermissionByToken, getJWTEncode
+from api.Validations.Auth import hasPermissionByToken
 from api.Validations.MustHaveId import mustHaveId
 from api.Validations.ImageValidations import ImageValidation
-
-from api.Utils import getBase64Size
 
 class ImageResource(Resource):
     def get(self, id=None):

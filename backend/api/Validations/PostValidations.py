@@ -1,5 +1,4 @@
 from api.Validations.Validators import Validators
-
 from api.Model import Post, Category, Image
 
 class PostValidation(Validators):

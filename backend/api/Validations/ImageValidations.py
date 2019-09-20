@@ -1,6 +1,5 @@
 from api.Validations.Validators import Validators
-
-from api.Model import User, Image
+from api.Model import Image
 
 class ImageValidation(Validators):
     def __init__(self, req):
@@ -12,7 +11,7 @@ class ImageValidation(Validators):
         self.response = None
 
         # o modelo a ser validado
-        self.model = User
+        self.model = Image
 
         # campos necessários
         self.fields = ['image']
