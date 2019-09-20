@@ -4,7 +4,7 @@ import sys
 import base64
 import re
 
-from api.Model import db, Image, ImageSchema, User, Post
+from api.Model import db, Image, ImageSchema, User, Post, Configuration, ConfigurationImage
 
 from api.Validations.Auth import hasPermissionByToken, getJWTEncode
 from api.Validations.MustHaveId import mustHaveId
@@ -103,6 +103,9 @@ class ImageResource(Resource):
         user = User.query.filter_by(image_id=id).first()
         if user: 
             return {'message': 'A imagem não pode ser deletada pois possui usuários relacionados a ela'}, 501
+        config = Configuration.query.join(ConfigurationImage).filter_by(image_id=id).first()
+        if config: 
+            return {'message': 'A imagem não pode ser deletada pois possui banners relacionados a ela'}, 501
         image = Image.query.filter_by(id=id).first()
         if image:
             try:
