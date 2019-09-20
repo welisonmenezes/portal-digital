@@ -1,0 +1,66 @@
+.wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-family: sans-serif;
+    color: #fff;
+}
+
+.wrapper .slideshow {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.wrapper .slideshow .slick-slide {
+    margin: 0;
+    position: relative;
+}
+
+.slick-slide{
+    outline: none !important;
+}
+.slick-slide a{
+    color: #3a414e;
+}
+
+.wrapper .slideshow .slideshow-item > div{
+    height: 60vh;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat
+}
+
+.wrapper .slideshow .slick-slide img {
+    width: 100%;
+}
+
+.wrapper .slideshow .slick-slide img .subtitle {
+    position: absolute;
+    right: 15%;
+    bottom: 20px;
+    left: 15%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.carouse .carousel {
+    margin-right: -10px;
+    margin-left: -10px;
+    margin-bottom: 50px;
+}
+
+.carouse .carousel div .card{
+    margin: 0 10px;
+    border: none;
+}
+.carouse .carousel div .card h3{
+    margin-top: 20px;
+    font-size: 18px;
+}

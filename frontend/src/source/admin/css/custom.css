@@ -1,0 +1,256 @@
+table tr td:last-child {
+    width: 180px;
+    text-align: right;
+}
+
+table tr th:last-child {
+    text-align: right;
+}
+
+button btn-group:last-child {
+    width: 80px;
+}
+
+table .mdi {
+    display: inline-block;
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+table .mdi.edit {
+    color: green;
+}
+
+table .mdi.delete {
+    color: red;
+}
+
+table a,
+table i {
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+table a:hover {
+    text-decoration: none;
+}
+
+.table-pagination {
+    margin-top: 40px;
+}
+
+.Admin .card-body {
+    position: relative;
+}
+
+.Admin .card-body .link-edit {
+    display: inline-block;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+
+.Admin .card-body .mdi.edit {
+    font-size: 24px;
+}
+
+.form-control,
+.dataTables_wrapper select,
+select.form-control,
+.dataTables_wrapper select {
+    border: solid 1px #d3d3d3;
+}
+
+.ul-fig-banner {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.ul-fig-banner li {
+    width: 45%;
+    list-style: none;
+    margin: 10px;
+    flex-basis: 45%
+}
+
+.ul-fig-banner img {
+    max-width: 100%;
+}
+
+.fig-banner {
+    position: relative;
+}
+
+.fig-banner i {
+    position: absolute;
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
+    top: -21px;
+    right: -12px;
+}
+
+.Admin .content-wrapper {
+    background: #f3f3f3;
+    padding: 2.1rem 1.04rem;
+    width: 100%;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+}
+
+.Admin .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.Admin .col-1,
+.Admin .col-2,
+.Admin .col-3,
+.Admin .col-4,
+.Admin .col-5,
+.Admin .col-6,
+.Admin .col-7,
+.Admin .col-8,
+.Admin .col-9,
+.Admin .col-10,
+.Admin .col-11,
+.Admin .col-12,
+.Admin .col,
+.Admin .col-auto,
+.Admin .col-sm-1,
+.Admin .col-sm-2,
+.Admin .col-sm-3,
+.Admin .col-sm-4,
+.Admin .col-sm-5,
+.Admin .col-sm-6,
+.Admin .col-sm-7,
+.Admin .col-sm-8,
+.Admin .col-sm-9,
+.Admin .col-sm-10,
+.Admin .col-sm-11,
+.Admin .col-sm-12,
+.Admin .col-sm,
+.Admin .col-sm-auto,
+.Admin .col-md-1,
+.Admin .col-md-2,
+.Admin .col-md-3,
+.Admin .col-md-4,
+.Admin .col-md-5,
+.Admin .col-md-6,
+.Admin .col-md-7,
+.Admin .col-md-8,
+.Admin .col-md-9,
+.Admin .col-md-10,
+.Admin .col-md-11,
+.Admin .col-md-12,
+.Admin .col-md,
+.Admin .col-md-auto,
+.Admin .col-lg-1,
+.Admin .col-lg-2,
+.Admin .col-lg-3,
+.Admin .col-lg-4,
+.Admin .col-lg-5,
+.Admin .col-lg-6,
+.Admin .col-lg-7,
+.Admin .col-lg-8,
+.Admin .col-lg-9,
+.Admin .col-lg-10,
+.Admin .col-lg-11,
+.Admin .col-lg-12,
+.Admin .col-lg,
+.Admin .col-lg-auto,
+.Admin .col-xl-1,
+.Admin .col-xl-2,
+.Admin .col-xl-3,
+.Admin .col-xl-4,
+.Admin .col-xl-5,
+.Admin .col-xl-6,
+.Admin .col-xl-7,
+.Admin .col-xl-8,
+.Admin .col-xl-9,
+.Admin .col-xl-10,
+.Admin .col-xl-11,
+.Admin .col-xl-12,
+.Admin .col-xl,
+.Admin .col-xl-auto {
+    position: relative;
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.Admin .fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.Admin .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #e7eaed;
+    border-radius: 0;
+}
+
+
+@keyframes dropdownAnimation {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -30px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+        transform: translate3d(0, 0px, 0);
+    }
+}
+
+.dropdownAnimation,
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-menu {
+    animation-name: dropdownAnimation;
+    -webkit-animation-duration: 0.25s;
+    -moz-animation-duration: 0.25s;
+    -ms-animation-duration: 0.25s;
+    -o-animation-duration: 0.25s;
+    animation-duration: 0.25s;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    -ms-animation-fill-mode: both;
+    -o-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.Admin .btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    border-radius: 0.1875rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.Admin .btn {
+    font-size: 0.875rem;
+    line-height: 1;
+    font-weight: 400;
+}
+
+.Admin .btn-primary,
+.Admin .btn-primary:hover {
+    box-shadow: 0 2px 2px 0 rgba(77, 131, 255, 0.14), 0 3px 1px -2px rgba(77, 131, 255, 0.2), 0 1px 5px 0 rgba(77, 131, 255, 0.12);
+}

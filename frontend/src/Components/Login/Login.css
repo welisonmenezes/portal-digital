@@ -1,0 +1,27 @@
+.Login .btn-lg,
+.Login .btn-group-lg > .btn{
+    padding: 1rem 3rem;
+}
+
+.Login .page-body-wrapper.full-page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0 0 0 0 !important;
+    display: flex;
+}
+
+.Login .content-wrapper {
+    background: #f3f3f3;
+    padding: 2.1rem 1.04rem;
+    width: 100%;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+}
+
+.Login .form-control-lg {
+    height: 3.5rem;
+    padding: 0.94rem 1.94rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
