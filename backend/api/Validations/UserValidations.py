@@ -62,4 +62,6 @@ class UserValidation(Validators):
 
         # apenas dois index por vez, o primeiro é a data que deve ser menor que a segunda data e maior ou igual a data corrente
         self.dateCompareFields = []
+
+        self.imageFields = []
     

@@ -2,6 +2,8 @@ import re
 import datetime
 from datetime import date
 
+from api.Utils import getBase64Size
+
 class Validators():
 
     # percorre todas as validações necessários
@@ -56,6 +58,11 @@ class Validators():
         if self.dateCompareFields:
             if not self.compareDates(self.dateCompareFields):
                 return False
+        
+        for field in self.imageFields:
+            if not self.validateImageType(field) or not self.validateImageSize(field):
+                return False
+                break
 
         return True
 
@@ -206,4 +213,24 @@ class Validators():
         if len(year) >= 1 and len(year) <= 4:
             return True
         else:
+            return False
+
+
+    def validateImageType(self, field):
+        baseType = re.search('data:image/(.+?);base64,', self.req[field])
+        if (baseType and ( baseType.group(1) == 'png' or
+                            baseType.group(1) == 'jpg' or
+                            baseType.group(1) == 'jpeg' or
+                            baseType.group(1) == 'gif') ):
+            return True
+        else:
+            self.response = { 'message': 'Tipo de arquivo inválido' }, 501
+            return False
+
+
+    def validateImageSize(self, field):
+        if (int(getBase64Size(self.req[field])) <= int(5017969)):
+            return True
+        else:
+            self.response = { 'message': 'O tamanho da imagem não deve exceder 5mb' }, 501
             return False

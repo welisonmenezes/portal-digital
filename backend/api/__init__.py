@@ -17,8 +17,10 @@ api.add_resource(UserResource, '/user', '/user/<int:id>')
 api.add_resource(PostByIdResource, '/post/<int:id>')
 api.add_resource(PostResource, '/post', '/post/<int:id>')
 
-api.add_resource(ImageResource, '/image', '/image/<int:id>')
 api.add_resource(MediaResource, '/media/<int:id>')
+api.add_resource(ImageByIdResource,'/image/<int:id>')
+api.add_resource(ImageResource, '/image', '/image/<int:id>')
+
 api.add_resource(ConfigurationResource, '/configuration')
 api.add_resource(CategoryResource, '/category', '/category/<int:id>')
 api.add_resource(AuthResource, '/auth')

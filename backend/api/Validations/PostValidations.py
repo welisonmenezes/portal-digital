@@ -68,4 +68,6 @@ class PostValidation(Validators):
             'departure_date',
         ]
 
+        self.imageFields = []
+
     
