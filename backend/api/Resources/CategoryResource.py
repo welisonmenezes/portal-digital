@@ -43,11 +43,7 @@ class CategoryResource(Resource):
                 }
             }, 200
         else:
-            return {
-                'error': True,
-                'code': '101',
-                'message': 'Nenhuma categoria encontrada'
-            }, 404
+            return {'message': 'Nenhuma categoria encontrada'}, 404
 
 
 

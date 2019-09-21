@@ -244,6 +244,245 @@
 			]
 		},
 		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "get-category",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-category-filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category?name=t&page=1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "t"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-category-by-id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post-category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"CatName 4\",\n\t\"description\": \"CatDesc\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put-category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"CatName b\",\n\t\"description\": \"CatDesc\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category/11",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWdpc3RyeSI6IjExMTExMSIsInJvbGUiOiJhZG1pbiJ9.SW6gvk7p1uY8VRtsuNAIGJTOhYsyxNmL7B4zS0en5Jc"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/api/category/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Image",
 			"item": [
 				{
