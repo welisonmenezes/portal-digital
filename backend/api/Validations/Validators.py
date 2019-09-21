@@ -80,7 +80,7 @@ class Validators():
 
     # verifica se um campo necessári existe na requisição
     def validateReqFields(self, field):
-        if not self.req.get(field) and self.req.get(field) != '':
+        if not self.req.get(field) and self.req.get(field) != '' and self.req.get(field) != []:
             self.response = { 'message': 'O campo ' + field + ' não foi enviado' }, 501
             return False
         else:
