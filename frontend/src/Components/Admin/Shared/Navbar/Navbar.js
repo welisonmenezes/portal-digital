@@ -48,7 +48,7 @@ class Navbar extends Component {
     }
 
     handleLogout = () => {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('Token');
         //this.props.setUserLogginStatus(false);
         if (/admin*/.test(window.location.pathname)) {
             this.setState({ redirect: true });

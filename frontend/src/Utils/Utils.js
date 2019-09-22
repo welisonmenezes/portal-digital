@@ -113,13 +113,12 @@ export const CreateSoundCloudIframe = (node, config, mustReturn) => {
 };
 
 export const HasPermission = (permissions) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('Token');
     if (token) {
         const decoded = jwtDecode(token);
         if (decoded['role'] && permissions.includes(decoded['role'])) {
             return true;
         }
     }
-    //return false;
-    return true;
+    return false;
 }

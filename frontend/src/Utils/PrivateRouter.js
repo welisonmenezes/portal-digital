@@ -12,7 +12,7 @@ const PrivateRouter = ({ component: Component, ...rest }) => {
     };
 
     const handleError = () => {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('Token');
         Store.dispatch(setUserLogginStatus(false));
         Store.dispatch(setMessageProtectedRoute('Você foi deslogado do sistema por tentar acessar uma rota protegida. Por favor, faça seu login novamente.'));
         return <Route {...rest} render={props => (<Redirect to={{ pathname: '/login', state: { from: props.location } }} />)} />

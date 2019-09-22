@@ -1,3 +1,3 @@
 export default function IsLoggedIn() {
-    return (localStorage.getItem('token'));
+    return (sessionStorage.getItem('Token'));
 }
