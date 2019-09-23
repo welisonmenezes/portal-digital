@@ -37,7 +37,7 @@ class Admin extends Component {
                         <div className="content-wrapper">
                             <Route render={({ location }) => (
                                 <TransitionGroup>
-                                    <CSSTransition key={location.key} classNames="fade" timeout={300} transitionAppear={true} transitionEnter={false} transitionLeave={false}>
+                                    <CSSTransition key={location.pathname} classNames="fade" timeout={100} transitionAppear={true} transitionEnter={false} transitionLeave={false}>
                                         <Switch location={location}>
                                             <PrivateRouter path='/admin' exact={true} component={Dashboard} permissions={['admin', 'author', 'editor', 'user']} />
 

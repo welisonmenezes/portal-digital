@@ -98,10 +98,24 @@
     right: -12px;
 }
 
-.Admin .table td img{
+.Admin .table td img {
     height: auto;
     max-height: 36px;
     width: auto;
     max-width: 36px;
     border-radius: unset;
+}
+
+.Admin .table-responsive {
+    position: relative;
+}
+
+.Admin .table-responsive .Spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

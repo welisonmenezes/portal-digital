@@ -20,7 +20,14 @@ class AdminUsers extends Component {
 	}
 
 	componentDidMount() {
-		this.getUsers();
+		const searchParams = new URLSearchParams(this.props.location.search);
+		const page = searchParams.get('page');
+		if (page) {
+			this.setState({ page });
+		}
+		setTimeout(() => {
+			this.getUsers();
+		}, 250);
 	}
 
 	getUsers() {
@@ -61,14 +68,30 @@ class AdminUsers extends Component {
 			});
 	}
 
+	doPaginate = (page) => {
+		if (page === this.state.page) {
+			return false;
+		}
+		const searchParams = new URLSearchParams(this.props.location.search);
+		searchParams.set('page', page);
+		this.props.history.push({
+			pathname: this.props.location.pathname,
+			search: searchParams.toString()
+		});
+		this.setState({
+			isLoadingData: true,
+			page
+		});
+		setTimeout(() => {
+			this.getUsers();
+		}, 250);
+	};
+
 	render() {
 		return (
 			<div className="AdminUsers">
 				{this.state.redirect &&
 					<Redirect to='/login' />
-				}
-				{this.state.isLoadingData &&
-					<Spinner />
 				}
 				{this.state.loadDataError &&
 					<div className="row">
@@ -77,7 +100,7 @@ class AdminUsers extends Component {
 						</div>
 					</div>
 				}
-				{(!this.state.isLoadingData && !this.state.loadDataError) &&
+				{!this.state.loadDataError &&
 					<div className="row">
 						<div className="col-lg-12 grid-margin stretch-card">
 							<div className="card">
@@ -85,6 +108,9 @@ class AdminUsers extends Component {
 									<h4 className="card-title">Lista de Usuários</h4>
 									<FilterUsers />
 									<div className="table-responsive">
+										{this.state.isLoadingData &&
+											<Spinner />
+										}
 										<table className="table table-striped">
 											<thead>
 												<tr>
@@ -125,7 +151,7 @@ class AdminUsers extends Component {
 											</tbody>
 										</table>
 									</div>
-									<Pagination />
+									<Pagination doPaginate={this.doPaginate} currentPage={this.state.page} />
 								</div>
 							</div>
 						</div>

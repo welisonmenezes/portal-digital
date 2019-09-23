@@ -281,7 +281,7 @@ class UserForm extends Component {
                                         {this.state.isLoading &&
                                             <Spinner />
                                         }
-                                        <button type="button" className="btn btn-light">Cancelar</button>
+                                        <button type="button" className="btn btn-light" onClick={() => {history.back()}}>Cancelar</button>
                                     </form>
                                 </div>
                             </div>
