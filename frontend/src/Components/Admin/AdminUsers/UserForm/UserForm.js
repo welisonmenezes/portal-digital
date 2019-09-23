@@ -96,7 +96,7 @@ class UserForm extends Component {
             role: data.role,
             email: data.email,
             phone: data.phone,
-            image_id: data.image_id
+            image_id: (data.image_id !== null) ? data.image_id : ''
         });
     }
 
@@ -187,6 +187,12 @@ class UserForm extends Component {
         this.setState({image_id: uploadButtonState.imageId});
     }
 
+    removeImage = () => {
+        this.setState({
+            image_id: ''
+        })
+    }
+
     render() {
         return (
             <div className="UserForm">
@@ -257,6 +263,7 @@ class UserForm extends Component {
                                         {this.state.image_id &&
                                             <div className="form-group">
                                                 <figure className="previewImage">
+                                                    <i className="mdi mdi-close-circle" onClick={this.removeImage}></i>
                                                     <img src={process.env.REACT_APP_BASE_URL+'/api/media/'+this.state.image_id} alt="User Avatar" />
                                                 </figure>
                                             </div>

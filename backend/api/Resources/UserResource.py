@@ -104,6 +104,7 @@ class UserResource(Resource):
                         user.role = json_data['role']
                         user.email = json_data['email']
                         user.phone = json_data['phone']
+                        user.image_id = None
 
                         if json_data['image_id'] != '':
                             user.image_id = json_data['image_id']
