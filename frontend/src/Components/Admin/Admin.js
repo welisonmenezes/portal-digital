@@ -39,7 +39,7 @@ class Admin extends Component {
                                 <TransitionGroup>
                                     <CSSTransition key={location.key} classNames="fade" timeout={300} transitionAppear={true} transitionEnter={false} transitionLeave={false}>
                                         <Switch location={location}>
-                                            <PrivateRouter path='/admin' exact={true} component={Dashboard} permissions={['admin']} />
+                                            <PrivateRouter path='/admin' exact={true} component={Dashboard} permissions={['admin', 'author', 'editor', 'user']} />
 
                                             <PrivateRouter path='/admin/noticias' exact={true} component={AdminPosts} permissions={['admin']} />
                                             <PrivateRouter path='/admin/noticias/add' exact={true} component={PostForm} permissions={['admin']} />
@@ -54,7 +54,7 @@ class Admin extends Component {
                                             <PrivateRouter path='/admin/avisos/:id' exact={true} component={PostForm} permissions={['admin']} />
 
                                             <PrivateRouter path='/admin/usuarios' exact={true} component={AdminUsers} permissions={['admin']} />
-                                            <PrivateRouter path='/admin/usuarios/add' exact={true} component={UserForm} permissions={['admin']} />
+                                            <PrivateRouter path='/admin/usuarios/add' exact={true} component={UserForm} permissions={['admin', 'author', 'editor', 'user']} />
                                             <PrivateRouter path='/admin/usuarios/:id' exact={true} component={UserForm} permissions={['admin']} />
 
                                             <PrivateRouter path='/admin/categorias' exact={true} component={AdminCategories} permissions={['admin']} />

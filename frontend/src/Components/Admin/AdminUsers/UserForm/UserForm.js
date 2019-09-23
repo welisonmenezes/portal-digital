@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Spinner from '../../../Shared/Spinner/Spinner';
 
 class UserForm extends Component {
@@ -8,6 +9,7 @@ class UserForm extends Component {
         this.state = {
             currentPath: this.props.location.pathname,
             title: null,
+            mode: null,
             isLoading: false,
             errorMessage: null,
             successMessage: null,
@@ -27,14 +29,15 @@ class UserForm extends Component {
 		this.setState({ currentPath: this.props.location.pathname });
 		const regUsers = /admin\/usuarios\/[0-9]/g;
         if (this.props.location.pathname === '/admin/usuarios/add') {
-            this.setState({ title: 'Adicionar Usuário' });
+            this.setState({ title: 'Adicionar Usuário', mode: 'add' });
         } else if (regUsers.test(this.props.location.pathname)) {
-            this.setState({ title: 'Editar Usuário' });
+            this.setState({ title: 'Editar Usuário', mode: 'edit' });
         }
     }
 
     resetUserState() {
         this.setState({
+            redirect: false,
             isLoading: false,
             errorMessage: null,
             successMessage: null,
@@ -73,6 +76,12 @@ class UserForm extends Component {
             })
         })
             .then(res => {
+                if (res.status === 403) {
+                    sessionStorage.removeItem('Token');
+                    setTimeout(() => {
+                        this.setState({redirect: true});
+                    }, 250);
+                }
                 return res.json()
             })
             .then(data => {
@@ -104,6 +113,9 @@ class UserForm extends Component {
     render() {
         return (
             <div className="UserForm">
+                {this.state.redirect &&
+                    <Redirect to='/login' />
+                }
                 <div className="row">
                     <div className="col-md-6 grid-margin stretch-card">
                         <div className="card">
