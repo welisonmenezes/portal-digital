@@ -97,3 +97,11 @@
     top: -12px;
     right: -12px;
 }
+
+.Admin .table td img{
+    height: auto;
+    max-height: 36px;
+    width: auto;
+    max-width: 36px;
+    border-radius: unset;
+}

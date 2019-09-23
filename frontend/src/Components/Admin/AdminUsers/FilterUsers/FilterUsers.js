@@ -3,6 +3,14 @@ import React, { Component } from "react";
 import './FilterUsers.css';
 
 class FilterUsers extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    componentDidMount() {}
+
     render() {
         return (
             <div className="FilterUsers">
