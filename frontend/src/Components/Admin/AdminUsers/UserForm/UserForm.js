@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Spinner from '../../../Shared/Spinner/Spinner';
+import UploadButton from '../../Shared/UploadButton/UploadButton';
 
 class UserForm extends Component {
 
@@ -156,8 +157,10 @@ class UserForm extends Component {
             .then(data => {
                 window.scrollTo(0, 0);
                 if (data.id) {
-                    document.getElementById('userForm').reset();
-                    this.resetUserState();
+                    if (this.state.mode === 'add') {
+                        document.getElementById('userForm').reset();
+                        this.resetUserState();
+                    }
                     this.setState({ successMessage: 'Usuário salvo com sucesso' });
                 } else if (data.message) {
                     this.setState({ errorMessage: data.message });
@@ -178,6 +181,10 @@ class UserForm extends Component {
         const obj = {};
         obj[name] = value;
         this.setState(obj);
+    }
+
+    getUploadButtonState = (uploadButtonState) => {
+        this.setState({image_id: uploadButtonState.imageId});
     }
 
     render() {
@@ -245,16 +252,15 @@ class UserForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Avatar</label>
-                                            <input type="file" name="img[]" className="file-upload-default" />
-                                            <div className="input-group">
-                                                <input type="text" className="form-control file-upload-info"
-                                                    placeholder="Upload Image" />
-                                                <span className="input-group-append">
-                                                    <button className="file-upload-browse btn btn-primary"
-                                                        type="button">Upload</button>
-                                                </span>
-                                            </div>
+                                            <UploadButton getUploadButtonState={this.getUploadButtonState} />
                                         </div>
+                                        {this.state.image_id &&
+                                            <div className="form-group">
+                                                <figure className="previewImage">
+                                                    <img src={process.env.REACT_APP_BASE_URL+'/api/media/'+this.state.image_id} alt="User Avatar" />
+                                                </figure>
+                                            </div>
+                                        }
                                         {!this.state.isLoading &&
                                             <div className="d-inline-block">
                                                 {this.state.mode === 'add' &&

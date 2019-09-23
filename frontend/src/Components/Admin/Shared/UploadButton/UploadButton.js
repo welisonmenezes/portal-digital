@@ -8,7 +8,9 @@ class UploadButton extends Component {
         this.state = {
             currentImage: null,
             uploadError: null,
-            loadingImage: false
+            loadingImage: false,
+            fileName: '',
+            imageId: ''
         };
     }
 
@@ -17,13 +19,16 @@ class UploadButton extends Component {
         this.setState({
             uploadError: null,
             currentImage: null,
-            loadingImage: false
+            loadingImage: false,
+            fileName: '',
+            imageId: ''
         });
         this.sendStateToParentComponent();
 
         const element = document.querySelector('.UploadButton input');
         const file = element.files[0];
         if (file && file.name) {
+            this.setState({ fileName: file.name });
             const extension = GetFileExtension(file.name).toLowerCase();
             const accepts = element.getAttribute('accept').split(',');
             if (file.size <= 5017969) {
@@ -32,11 +37,12 @@ class UploadButton extends Component {
                     reader.onloadend = () => {
                         this.setState({ loadingImage: true });
                         this.sendStateToParentComponent();
-                        fetch('http://127.0.0.1:5000/api/image', {
+                        fetch(`${process.env.REACT_APP_BASE_URL}/api/image`, {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json',
+                                'Authorization': sessionStorage.getItem('Token')
                             },
                             body: JSON.stringify({
                                 image: reader.result
@@ -46,12 +52,14 @@ class UploadButton extends Component {
                             .then(data => {
                                 if (data && data.id) {
                                     this.setState({
-                                        currentImage: 'http://127.0.0.1:5000/api/media/' + data.id,
+                                        currentImage: `${process.env.REACT_APP_BASE_URL}/api/media/${data.id}`,
+                                        imageId: data.id,
                                         loadingImage: false
                                     });
                                     this.sendStateToParentComponent();
                                 } else {
                                     element.value = null;
+                                    this.setState({ fileName: '' });
                                     this.setState({
                                         uploadError: data.message,
                                         loadingImage: false
@@ -60,6 +68,7 @@ class UploadButton extends Component {
                                 }
                             }, error => {
                                 element.value = null;
+                                this.setState({ fileName: '' });
                                 this.setState({ loadingImage: false });
                                 this.setState({
                                     uploadError: 'Falha ao tentar conectar com o servidor.',
@@ -71,17 +80,23 @@ class UploadButton extends Component {
                     reader.readAsDataURL(file);
                 } else {
                     element.value = null;
+                    this.setState({ fileName: '' });
                     this.setState({ uploadError: 'Tipo de arquivo inválido.' });
                     this.sendStateToParentComponent();
                 }
             } else {
                 element.value = null;
+                this.setState({ fileName: '' });
                 setTimeout(() => {
                     this.setState({ uploadError: 'O tamanho da imagem não deve exceder 5mb.' });
                     this.sendStateToParentComponent();
                 }, 1);
             }
         }
+    }
+
+    triggerUploadFile() {
+        document.querySelector('.UploadButton input').click();
     }
 
     sendStateToParentComponent(value) {
@@ -91,13 +106,15 @@ class UploadButton extends Component {
     render() {
         return (
             <div className="UploadButton">
-                <input
-                    type="file"
-                    id="RichEditorInputFile"
-                    name="files"
-                    accept=".jpg,.jpeg,.png,.gif"
-                    className="form-control"
-                    onChange={this.handleUploadImage} />
+                <input type="file" name="files" className="file-upload-default" id="RichEditorInputFile" accept=".jpg,.jpeg,.png,.gif" onChange={this.handleUploadImage} />
+                <div className="input-group">
+                    <input type="text" className="form-control file-upload-info"
+                        placeholder="Upload Image" readOnly value={this.state.fileName} />
+                    <span className="input-group-append">
+                        <button className="file-upload-browse btn btn-primary"
+                            type="button" onClick={this.triggerUploadFile}>Upload</button>
+                    </span>
+                </div>
             </div>
         );
     }
