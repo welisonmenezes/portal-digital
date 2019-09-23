@@ -8,57 +8,118 @@ class UserForm extends Component {
         super(props);
         this.state = {
             currentPath: this.props.location.pathname,
-            title: null,
-            mode: null,
+            title: '',
+            mode: '',
             isLoading: false,
-            errorMessage: null,
-            successMessage: null,
-            first_name: null,
-            last_name: null,
-            registry: null,
-            password: null,
-            role: null,
-            email: null,
-            phone: null,
+            isLoadingData: false,
+            errorMessage: '',
+            successMessage: '',
+            loadDataError: '',
+            user_id: '',
+            first_name: '',
+            last_name: '',
+            registry: '',
+            password: '',
+            role: '',
+            email: '',
+            phone: '',
             image_id: ''
         };
     }
 
     componentDidMount() {
-		window.scrollTo(0, 0);
-		this.setState({ currentPath: this.props.location.pathname });
-		const regUsers = /admin\/usuarios\/[0-9]/g;
+        window.scrollTo(0, 0);
+        this.setState({ currentPath: this.props.location.pathname });
+        const regUsers = /admin\/usuarios\/[0-9]/g;
         if (this.props.location.pathname === '/admin/usuarios/add') {
-            this.setState({ title: 'Adicionar Usuário', mode: 'add' });
+            this.setState({
+                title: 'Adicionar Usuário',
+                mode: 'add'
+            });
+
         } else if (regUsers.test(this.props.location.pathname)) {
-            this.setState({ title: 'Editar Usuário', mode: 'edit' });
+            this.setState({
+                title: 'Editar Usuário',
+                mode: 'edit',
+                user_id: this.props.match.params.id,
+                isLoadingData: true
+            });
+            this.getUser();
         }
+    }
+
+    getUser() {
+        fetch(`${process.env.REACT_APP_BASE_URL}/api/user/${this.props.match.params.id}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('Token')
+            }
+        })
+            .then(res => {
+                if (res.status === 403) {
+                    sessionStorage.removeItem('Token');
+                    setTimeout(() => {
+                        this.setState({ redirect: true });
+                    }, 250);
+                }
+                return res.json()
+            })
+            .then(data => {
+                if (data.id) {
+                    this.fillFormData(data);
+                } else {
+                    this.setState({
+                        loadDataError: data.message
+                    })
+                }
+                this.setState({
+                    isLoadingData: false
+                })
+            })
+            .catch(error => {
+                console.log('getUser: ', error);
+                this.setState({
+                    loadDataError: 'Ocorreu um problema ao conectar com o servidor',
+                    isLoadingData: false
+                });
+            });
+    }
+
+    fillFormData(data) {
+        this.setState({
+            first_name: data.first_name,
+            last_name: data.last_name,
+            registry: data.registry,
+            role: data.role,
+            email: data.email,
+            phone: data.phone,
+            image_id: data.image_id
+        });
     }
 
     resetUserState() {
         this.setState({
             redirect: false,
             isLoading: false,
-            errorMessage: null,
-            successMessage: null,
-            first_name: null,
-            last_name: null,
-            registry: null,
-            password: null,
-            role: null,
-            email: null,
-            phone: null,
+            errorMessage: '',
+            successMessage: '',
+            first_name: '',
+            last_name: '',
+            registry: '',
+            password: '',
+            role: '',
+            email: '',
+            phone: '',
             image_id: ''
         });
     }
 
-
-    saveUser = () => {
-        this.setState({ isLoading: true });
-        this.setState({errorMessage: null});
-        this.setState({successMessage: null});
-        fetch(`${process.env.REACT_APP_BASE_URL}/api/user`, {
-            method: 'post',
+    getRequestInfos() {
+        const method = (this.state.mode === 'add') ? 'POST' : 'PUT';
+        return {
+            method,
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json',
@@ -74,12 +135,20 @@ class UserForm extends Component {
                 'phone': this.state.phone,
                 'image_id': this.state.image_id,
             })
-        })
+        };
+    }
+
+    saveUser = () => {
+        this.setState({ isLoading: true });
+        this.setState({ errorMessage: null });
+        this.setState({ successMessage: null });
+        const path = (this.state.mode === 'add') ? '/api/user' : '/api/user/' + this.state.user_id;
+        fetch(`${process.env.REACT_APP_BASE_URL}${path}`, this.getRequestInfos())
             .then(res => {
                 if (res.status === 403) {
                     sessionStorage.removeItem('Token');
                     setTimeout(() => {
-                        this.setState({redirect: true});
+                        this.setState({ redirect: true });
                     }, 250);
                 }
                 return res.json()
@@ -89,26 +158,27 @@ class UserForm extends Component {
                 if (data.id) {
                     document.getElementById('userForm').reset();
                     this.resetUserState();
-                    this.setState({successMessage: 'Usuário salvo com sucesso'});
+                    this.setState({ successMessage: 'Usuário salvo com sucesso' });
                 } else if (data.message) {
-                    this.setState({errorMessage: data.message});
+                    this.setState({ errorMessage: data.message });
                 }
                 this.setState({ isLoading: false });
             })
             .catch(error => {
+                console.log('saveUser: ', error);
                 window.scrollTo(0, 0);
-                this.setState({errorMessage: 'Ocorreu um problema ao conectar com o servidor'});
+                this.setState({ errorMessage: 'Ocorreu um problema ao conectar com o servidor' });
                 this.setState({ isLoading: false });
             });
     }
-    
+
     updateInputValue = (evt) => {
         const name = evt.target.getAttribute('name');
         const value = evt.target.value;
         const obj = {};
         obj[name] = value;
         this.setState(obj);
-    } 
+    }
 
     render() {
         return (
@@ -116,80 +186,98 @@ class UserForm extends Component {
                 {this.state.redirect &&
                     <Redirect to='/login' />
                 }
-                <div className="row">
-                    <div className="col-md-6 grid-margin stretch-card">
-                        <div className="card">
-                            <div className="card-body">
-                                <h4 className="card-title">{this.state.title}</h4>
-                                {this.state.errorMessage &&
-                                    <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
-                                }
-                                {this.state.successMessage &&
-                                    <div className="alert alert-success" role="alert">{this.state.successMessage}</div>
-                                }
-                                <form className="forms-sample" id="userForm">
-                                    <div className="form-group">
-                                        <label>Nome</label>
-                                        <input type="text" name="first_name" className="form-control" placeholder="Nome" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Sobrenome</label>
-                                        <input type="text" name="last_name" className="form-control" placeholder="Sobrenome" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Matrícula</label>
-                                        <input type="text" name="registry" className="form-control" placeholder="Matrícula" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Email</label>
-                                        <input type="email" name="email" className="form-control" placeholder="Email" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Telefone</label>
-                                        <input type="text" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Senha</label>
-                                        <input type="password" name="password" className="form-control" placeholder="Senha" onChange={this.updateInputValue} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="">Nível de Permissão</label>
-                                        <select className="form-control" name="role" onChange={this.updateInputValue}>
-                                            <option>Selecione</option>
-                                            <option value="admin">Administrador</option>
-                                            <option value="editor">Editor</option>
-                                            <option value="author">Autor</option>
-                                            <option value="user">Usuário</option>
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Avatar</label>
-                                        <input type="file" name="img[]" className="file-upload-default" />
-                                        <div className="input-group">
-                                            <input type="text" className="form-control file-upload-info"
-                                                placeholder="Upload Image" />
-                                            <span className="input-group-append">
-                                                <button className="file-upload-browse btn btn-primary"
-                                                    type="button">Upload</button>
-                                            </span>
+                {this.state.isLoadingData &&
+                    <Spinner />
+                }
+                {this.state.loadDataError &&
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="alert alert-danger" role="alert">{this.state.loadDataError}</div>
+                        </div>
+                    </div>
+                }
+                {(!this.state.isLoadingData && !this.state.loadDataError) &&
+                    <div className="row">
+                        <div className="col-md-6 grid-margin stretch-card">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h4 className="card-title">{this.state.title}</h4>
+                                    {this.state.errorMessage &&
+                                        <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+                                    }
+                                    {this.state.successMessage &&
+                                        <div className="alert alert-success" role="alert">{this.state.successMessage}</div>
+                                    }
+                                    <form className="forms-sample" id="userForm">
+                                        <div className="form-group">
+                                            <label>Nome</label>
+                                            <input type="text" name="first_name" className="form-control" placeholder="Nome" onChange={this.updateInputValue} value={this.state.first_name} />
                                         </div>
-                                    </div>
-                                    {!this.state.isLoading &&
-                                        <button type="submit" className="btn btn-primary mr-2" onClick={(evt) => this.saveUser(evt)}>Enviar</button>
-                                    }
-                                    {this.state.isLoading &&
-                                        <Spinner />
-                                    }
-                                    <button type="button" className="btn btn-light">Cancelar</button>
-                                </form>
+                                        <div className="form-group">
+                                            <label>Sobrenome</label>
+                                            <input type="text" name="last_name" className="form-control" placeholder="Sobrenome" onChange={this.updateInputValue} value={this.state.last_name} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Matrícula</label>
+                                            <input type="text" name="registry" className="form-control" placeholder="Matrícula" onChange={this.updateInputValue} value={this.state.registry} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email</label>
+                                            <input type="email" name="email" className="form-control" placeholder="Email" onChange={this.updateInputValue} value={this.state.email} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Telefone</label>
+                                            <input type="text" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} value={this.state.phone} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Senha</label>
+                                            <input type="password" name="password" className="form-control" placeholder="Senha" onChange={this.updateInputValue} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="">Nível de Permissão</label>
+                                            <select className="form-control" name="role" onChange={this.updateInputValue} value={this.state.role}>
+                                                <option>Selecione</option>
+                                                <option value="admin">Administrador</option>
+                                                <option value="editor">Editor</option>
+                                                <option value="author">Autor</option>
+                                                <option value="user">Usuário</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Avatar</label>
+                                            <input type="file" name="img[]" className="file-upload-default" />
+                                            <div className="input-group">
+                                                <input type="text" className="form-control file-upload-info"
+                                                    placeholder="Upload Image" />
+                                                <span className="input-group-append">
+                                                    <button className="file-upload-browse btn btn-primary"
+                                                        type="button">Upload</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {!this.state.isLoading &&
+                                            <div className="d-inline-block">
+                                                {this.state.mode === 'add' &&
+                                                    <button type="submit" className="btn btn-primary mr-2" onClick={(evt) => this.saveUser(evt)}>Enviar</button>
+                                                }
+                                                {this.state.mode === 'edit' &&
+                                                    <button type="submit" className="btn btn-primary mr-2" onClick={(evt) => this.saveUser(evt)}>Editar</button>
+                                                }
+                                            </div>
+                                        }
+                                        {this.state.isLoading &&
+                                            <Spinner />
+                                        }
+                                        <button type="button" className="btn btn-light">Cancelar</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
         );
     }
 }
-
 
 export default UserForm;
