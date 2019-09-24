@@ -13,6 +13,7 @@ class AdminUsers extends Component {
 			isLoadingData: true,
 			loadDataError: '',
 			users: [],
+			pagination: null,
 			page: 1,
 			role: '',
 			name: ''
@@ -44,7 +45,10 @@ class AdminUsers extends Component {
 			})
 			.then(data => {
 				if (data.data) {
-					this.setState({ users: data.data });
+					this.setState({
+						users: data.data,
+						pagination: data.pagination
+					});
 				} else {
 					this.setState({
 						loadDataError: data.message
@@ -95,6 +99,7 @@ class AdminUsers extends Component {
 	}
 
 	render() {
+		//console.log(this.state.pagination)
 		return (
 			<div className="AdminUsers">
 				{this.state.redirect &&
@@ -158,7 +163,7 @@ class AdminUsers extends Component {
 											</tbody>
 										</table>
 									</div>
-									<Pagination doPaginate={this.doPaginate} currentPage={this.state.page} />
+									<Pagination doPaginate={this.doPaginate} currentPage={this.state.page} pagination={this.state.pagination} />
 								</div>
 							</div>
 						</div>

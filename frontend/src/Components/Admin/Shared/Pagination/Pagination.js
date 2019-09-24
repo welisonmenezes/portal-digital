@@ -2,24 +2,36 @@ import React, { Component } from "react";
 
 class Pagination extends Component {
 
-    componentDidMount() {}
+    componentDidMount() {
+
+    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.currentPage !== this.props.currentPage) {}
+        if (prevProps.currentPage !== this.props.currentPage) { }
     }
 
     doPaginate = (page) => {
         this.props.doPaginate(page);
     }
-    
+
     render() {
+        console.log(this.props)
         return (
             <div className="Pagination table-pagination">
-                <div className="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" className={(parseInt(this.props.currentPage, 10) === 1) ? "btn btn-primary active": "btn btn-primary"} onClick={() => { this.doPaginate(1) }}>1</button>
-                    <button type="button" className={(parseInt(this.props.currentPage, 10) === 2) ? "btn btn-primary active": "btn btn-primary"} onClick={() => { this.doPaginate(2) }}>2</button>
-                    <button type="button" className={(parseInt(this.props.currentPage, 10) === 3) ? "btn btn-primary active": "btn btn-primary"} onClick={() => { this.doPaginate(3) }}>3</button>
-                </div>
+                {(this.props.pagination && this.props.pagination != null) &&
+                    <div className="btn-group" role="group" aria-label="Basic example">
+                        {this.props.pagination.pages.map(page => {
+                            if (page) {
+                                return (
+
+                                    <button key={page} type="button" className={(parseInt(this.props.currentPage, 10) === page) ? "btn btn-primary active" : "btn btn-primary"} onClick={() => { this.doPaginate(page) }}>{page}</button>
+                                );
+                            } else {
+                                return <span className="btn" key={Math.random()}>...</span>;
+                            }
+                        })}
+                    </div>
+                }
             </div>
         );
     }
