@@ -31,7 +31,7 @@ class UserResource(Resource):
             filter = filter + (or_(User.first_name.like('%'+filterName+'%'), User.last_name.like('%'+filterName+'%')),)
         
         user_schema = UserSchema(many=True)
-        paginate = User.query.filter(*filter).order_by(desc(User.id)).paginate(page=page, per_page=2, error_out=False)
+        paginate = User.query.filter(*filter).order_by(desc(User.id)).paginate(page=page, per_page=1, error_out=False)
         users = paginate.items
         users = user_schema.dump(users)
 

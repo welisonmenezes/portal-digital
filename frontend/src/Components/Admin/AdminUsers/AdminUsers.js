@@ -20,17 +20,12 @@ class AdminUsers extends Component {
 	}
 
 	componentDidMount() {
-		const searchParams = new URLSearchParams(this.props.location.search);
-		const page = searchParams.get('page');
-		if (page) {
-			this.setState({ page });
-		}
-		setTimeout(() => {
-			this.getUsers();
-		}, 250);
+		this.loadUsers();
+		this.loadOnHistoryChange();
 	}
 
 	getUsers() {
+		this.setState({isLoadingData: true});
 		fetch(`${process.env.REACT_APP_BASE_URL}/api/user?page=${this.state.page}&role=${this.state.role}&name=${this.state.name}`, {
 			method: 'GET',
 			headers: {
@@ -78,14 +73,26 @@ class AdminUsers extends Component {
 			pathname: this.props.location.pathname,
 			search: searchParams.toString()
 		});
-		this.setState({
-			isLoadingData: true,
-			page
-		});
-		setTimeout(() => {
-			this.getUsers();
-		}, 250);
 	};
+
+	loadOnHistoryChange = () => {
+		this.props.history.listen((location, action) => {
+			setTimeout(() => {
+				this.loadUsers();
+			}, 1);
+		});
+	}
+
+	loadUsers = () => {
+		const searchParams = new URLSearchParams(this.props.location.search);
+		const page = (searchParams.get('page')) ? searchParams.get('page') : 1;
+		if (parseInt(page, 10)) {
+			this.setState({page, loadDataError: ''});
+			setTimeout(() => {
+				this.getUsers();
+			}, 50);
+		}
+	}
 
 	render() {
 		return (
