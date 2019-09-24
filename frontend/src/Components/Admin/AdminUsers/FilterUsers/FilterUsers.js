@@ -6,10 +6,25 @@ class FilterUsers extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            name: '',
+            role: ''
+        };
     }
 
     componentDidMount() {}
+
+    doFilter = () => {
+        this.props.doFilter(this.state.name, this.state.role);
+    }
+
+    updateInputValue = (evt) => {
+        const name = evt.target.getAttribute('name');
+        const value = evt.target.value;
+        const obj = {};
+        obj[name] = value;
+        this.setState(obj);
+    }
 
     render() {
         return (
@@ -21,25 +36,22 @@ class FilterUsers extends Component {
                         </div>
                         <div className="col-md-3">
                             <div className="form-group">
-                                <input
-                                    type="text"
-                                    className="form-control form-control-sm"
-                                    placeholder="Nome"
-                                />
+                                <input name="name" type="text" className="form-control form-control-sm" placeholder="Nome" onChange={this.updateInputValue} />
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="form-group">
-                                <select className="form-control form-control-sm">
-                                    <option value="">Permissão</option>
-                                    <option value="1">Usuário</option>
-                                    <option value="2">Administrador</option>
-                                    <option value="3">Editor</option>
+                                <select name="role" className="form-control form-control-sm" onChange={this.updateInputValue}>
+                                    <option value="">Selecione</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="editor">Editor</option>
+                                    <option value="author">Autor</option>
+                                    <option value="user">Usuário</option>
                                 </select>
                             </div>
                         </div>
                         <div className="col-md-2">
-                            <button type="button" className="btn btn-primary btn-sm btn-block">
+                            <button type="button" className="btn btn-primary btn-sm btn-block" onClick={() => { this.doFilter() }}>
                                 Filtrar
                             </button>
                         </div>

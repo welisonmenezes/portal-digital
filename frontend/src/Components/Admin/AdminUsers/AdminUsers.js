@@ -6,6 +6,8 @@ import Spinner from '../../Shared/Spinner/Spinner';
 
 class AdminUsers extends Component {
 
+	_isMounted = false;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,12 +23,18 @@ class AdminUsers extends Component {
 	}
 
 	componentDidMount() {
+		this._isMounted = true;
+		window.scrollTo(0, 0);
 		this.loadUsers();
 		this.loadOnHistoryChange();
 	}
 
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
 	getUsers() {
-		this.setState({isLoadingData: true});
+		this.setState({ isLoadingData: true });
 		fetch(`${process.env.REACT_APP_BASE_URL}/api/user?page=${this.state.page}&role=${this.state.role}&name=${this.state.name}`, {
 			method: 'GET',
 			headers: {
@@ -35,46 +43,54 @@ class AdminUsers extends Component {
 			}
 		})
 			.then(res => {
-				if (res.status === 403) {
-					sessionStorage.removeItem('Token');
-					setTimeout(() => {
-						this.setState({ redirect: true });
-					}, 250);
+				if (this._isMounted) {
+					if (res.status === 403) {
+						sessionStorage.removeItem('Token');
+						setTimeout(() => {
+							this.setState({ redirect: true });
+						}, 250);
+					}
+					return res.json();
 				}
-				return res.json()
 			})
 			.then(data => {
-				if (data.data) {
+				if (this._isMounted) {
+					if (data.data) {
+						this.setState({
+							users: data.data,
+							pagination: data.pagination
+						});
+					} else {
+						this.setState({
+							loadDataError: data.message
+						});
+					}
 					this.setState({
-						users: data.data,
-						pagination: data.pagination
-					});
-				} else {
-					this.setState({
-						loadDataError: data.message
+						isLoadingData: false
 					});
 				}
-				this.setState({
-					isLoadingData: false
-				})
 			})
 			.catch(error => {
-				console.log('getUsers: ', error);
-				this.setState({
-					loadDataError: 'Ocorreu um problema ao conectar com o servidor',
-					isLoadingData: false
-				});
+				if (this._isMounted) {
+					console.log('getUsers: ', error);
+					this.setState({
+						loadDataError: 'Ocorreu um problema ao conectar com o servidor',
+						isLoadingData: false
+					});
+				}
 			});
 	}
 
-	doPaginate = (page) => {
+	doPaginate = (page, name, role) => {
 		const searchParams = new URLSearchParams(this.props.location.search);
 		searchParams.set('page', page);
+		searchParams.set('name', name);
+		searchParams.set('role', role);
 		this.props.history.push({
 			pathname: this.props.location.pathname,
 			search: searchParams.toString()
 		});
-	};
+	}
 
 	loadOnHistoryChange = () => {
 		this.props.history.listen((location, action) => {
@@ -85,13 +101,17 @@ class AdminUsers extends Component {
 	}
 
 	loadUsers = () => {
-		const searchParams = new URLSearchParams(this.props.location.search);
-		const page = (searchParams.get('page')) ? searchParams.get('page') : 1;
-		if (parseInt(page, 10)) {
-			this.setState({page, loadDataError: ''});
-			setTimeout(() => {
-				this.getUsers();
-			}, 1);
+		if (this._isMounted) {
+			const searchParams = new URLSearchParams(this.props.location.search);
+			const page = (searchParams.get('page')) ? searchParams.get('page') : 1;
+			const name = (searchParams.get('name')) ? searchParams.get('name') : '';
+			const role = (searchParams.get('role')) ? searchParams.get('role') : '';
+			if (parseInt(page, 10)) {
+				this.setState({ page, name, role, loadDataError: '' });
+				setTimeout(() => {
+					this.getUsers();
+				}, 1);
+			}
 		}
 	}
 
@@ -103,6 +123,7 @@ class AdminUsers extends Component {
 					<div className="row">
 						<div className="col-md-12">
 							<div className="alert alert-danger" role="alert">{this.state.loadDataError}</div>
+							<button type="button" className="btn btn-primary" onClick={() => { history.back() }}>Voltar</button>
 						</div>
 					</div>
 				}
@@ -112,7 +133,7 @@ class AdminUsers extends Component {
 							<div className="card">
 								<div className="card-body">
 									<h4 className="card-title">Lista de Usuários</h4>
-									<FilterUsers />
+									<FilterUsers doFilter={(name, role) => { this.doPaginate(1, name, role) }} />
 									<div className="table-responsive">
 										{this.state.isLoadingData && <Spinner />}
 										<table className="table table-striped">
@@ -155,7 +176,7 @@ class AdminUsers extends Component {
 											</tbody>
 										</table>
 									</div>
-									<Pagination doPaginate={this.doPaginate} currentPage={this.state.page} pagination={this.state.pagination} />
+									<Pagination doPaginate={(page) => { this.doPaginate(page, this.state.name, this.state.role) }} currentPage={this.state.page} pagination={this.state.pagination} />
 								</div>
 							</div>
 						</div>

@@ -5,6 +5,8 @@ import UploadButton from '../../Shared/UploadButton/UploadButton';
 
 class UserForm extends Component {
 
+    _isMounted = false;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -29,6 +31,7 @@ class UserForm extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         window.scrollTo(0, 0);
         this.setState({ currentPath: this.props.location.pathname });
         const regUsers = /admin\/usuarios\/[0-9]/g;
@@ -48,6 +51,10 @@ class UserForm extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     getUser() {
         fetch(`${process.env.REACT_APP_BASE_URL}/api/user/${this.props.match.params.id}`, {
             method: 'GET',
@@ -58,28 +65,34 @@ class UserForm extends Component {
             }
         })
             .then(res => {
-                if (res.status === 403) {
-                    sessionStorage.removeItem('Token');
-                    setTimeout(() => {
-                        this.setState({ redirect: true });
-                    }, 250);
+                if (this._isMounted) {
+                    if (res.status === 403) {
+                        sessionStorage.removeItem('Token');
+                        setTimeout(() => {
+                            this.setState({ redirect: true });
+                        }, 250);
+                    }
+                    return res.json();
                 }
-                return res.json()
             })
             .then(data => {
-                if (data.id) {
-                    this.fillFormData(data);
-                } else {
-                    this.setState({ loadDataError: data.message })
+                if (this._isMounted) {
+                    if (data.id) {
+                        this.fillFormData(data);
+                    } else {
+                        this.setState({ loadDataError: data.message });
+                    }
+                    this.setState({ isLoadingData: false });
                 }
-                this.setState({ isLoadingData: false })
             })
             .catch(error => {
-                console.log('getUser: ', error);
-                this.setState({
-                    loadDataError: 'Ocorreu um problema ao conectar com o servidor',
-                    isLoadingData: false
-                });
+                if (this._isMounted) {
+                    console.log('getUser: ', error);
+                    this.setState({
+                        loadDataError: 'Ocorreu um problema ao conectar com o servidor',
+                        isLoadingData: false
+                    });
+                }
             });
     }
 
@@ -143,34 +156,40 @@ class UserForm extends Component {
         const path = (this.state.mode === 'add') ? '/api/user' : '/api/user/' + this.state.user_id;
         fetch(`${process.env.REACT_APP_BASE_URL}${path}`, this.getRequestInfos())
             .then(res => {
-                if (res.status === 403) {
-                    sessionStorage.removeItem('Token');
-                    setTimeout(() => {
-                        this.setState({ redirect: true });
-                    }, 250);
+                if (this._isMounted) {
+                    if (res.status === 403) {
+                        sessionStorage.removeItem('Token');
+                        setTimeout(() => {
+                            this.setState({ redirect: true });
+                        }, 250);
+                    }
+                    return res.json();
                 }
-                return res.json()
             })
             .then(data => {
-                window.scrollTo(0, 0);
-                if (data.id) {
-                    if (this.state.mode === 'add') {
-                        document.getElementById('userForm').reset();
-                        this.resetUserState();
+                if (this._isMounted) {
+                    window.scrollTo(0, 0);
+                    if (data.id) {
+                        if (this.state.mode === 'add') {
+                            document.getElementById('userForm').reset();
+                            this.resetUserState();
+                        }
+                        this.setState({ successMessage: 'Usuário salvo com sucesso' });
+                    } else if (data.message) {
+                        this.setState({ errorMessage: data.message });
                     }
-                    this.setState({ successMessage: 'Usuário salvo com sucesso' });
-                } else if (data.message) {
-                    this.setState({ errorMessage: data.message });
+                    this.setState({ isLoading: false });
                 }
-                this.setState({ isLoading: false });
             })
             .catch(error => {
-                console.log('saveUser: ', error);
-                window.scrollTo(0, 0);
-                this.setState({
-                    errorMessage: 'Ocorreu um problema ao conectar com o servidor',
-                    isLoading: false
-                });
+                if (this._isMounted) {
+                    console.log('saveUser: ', error);
+                    window.scrollTo(0, 0);
+                    this.setState({
+                        errorMessage: 'Ocorreu um problema ao conectar com o servidor',
+                        isLoading: false
+                    });
+                }
             });
     }
 
@@ -197,8 +216,9 @@ class UserForm extends Component {
                 {this.state.isLoadingData && <Spinner />}
                 {this.state.loadDataError &&
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                             <div className="alert alert-danger" role="alert">{this.state.loadDataError}</div>
+                            <button type="button" className="btn btn-primary" onClick={() => { history.back() }}>Voltar</button>
                         </div>
                     </div>
                 }
