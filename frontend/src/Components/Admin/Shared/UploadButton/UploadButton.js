@@ -9,26 +9,24 @@ class UploadButton extends Component {
             currentImage: null,
             uploadError: null,
             loadingImage: false,
-            fileName: '',
             imageId: ''
         };
     }
 
     handleUploadImage = () => {
-
         this.setState({
             uploadError: null,
             currentImage: null,
             loadingImage: false,
-            fileName: '',
             imageId: ''
         });
         this.sendStateToParentComponent();
-
         const element = document.querySelector('.UploadButton input');
+        const uploadInfo = document.querySelector('.file-upload-info');
+        uploadInfo.value = '';
         const file = element.files[0];
         if (file && file.name) {
-            this.setState({ fileName: file.name });
+            uploadInfo.value = file.name;
             const extension = GetFileExtension(file.name).toLowerCase();
             const accepts = element.getAttribute('accept').split(',');
             if (file.size <= 5017969) {
@@ -44,9 +42,7 @@ class UploadButton extends Component {
                                 'Content-Type': 'application/json',
                                 'Authorization': sessionStorage.getItem('Token')
                             },
-                            body: JSON.stringify({
-                                image: reader.result
-                            })
+                            body: JSON.stringify({ image: reader.result })
                         })
                             .then(data => data.json())
                             .then(data => {
@@ -59,7 +55,7 @@ class UploadButton extends Component {
                                     this.sendStateToParentComponent();
                                 } else {
                                     element.value = null;
-                                    this.setState({ fileName: '' });
+                                    uploadInfo.value = '';
                                     this.setState({
                                         uploadError: data.message,
                                         loadingImage: false
@@ -67,9 +63,9 @@ class UploadButton extends Component {
                                     this.sendStateToParentComponent();
                                 }
                             }, error => {
+                                console.log('handleUploadImage: ', error);
                                 element.value = null;
-                                this.setState({ fileName: '' });
-                                this.setState({ loadingImage: false });
+                                uploadInfo.value = '';
                                 this.setState({
                                     uploadError: 'Falha ao tentar conectar com o servidor.',
                                     loadingImage: false
@@ -80,13 +76,12 @@ class UploadButton extends Component {
                     reader.readAsDataURL(file);
                 } else {
                     element.value = null;
-                    this.setState({ fileName: '' });
+                    uploadInfo.value = '';
                     this.setState({ uploadError: 'Tipo de arquivo inválido.' });
                     this.sendStateToParentComponent();
                 }
             } else {
                 element.value = null;
-                this.setState({ fileName: '' });
                 setTimeout(() => {
                     this.setState({ uploadError: 'O tamanho da imagem não deve exceder 5mb.' });
                     this.sendStateToParentComponent();
@@ -108,8 +103,7 @@ class UploadButton extends Component {
             <div className="UploadButton">
                 <input type="file" name="files" className="file-upload-default" id="RichEditorInputFile" accept=".jpg,.jpeg,.png,.gif" onChange={this.handleUploadImage} />
                 <div className="input-group">
-                    <input type="text" className="form-control file-upload-info"
-                        placeholder="Upload Image" readOnly value={this.state.fileName} />
+                    <input type="text" className="form-control file-upload-info" placeholder="Upload Image" disabled />
                     <span className="input-group-append">
                         <button className="file-upload-browse btn btn-primary"
                             type="button" onClick={this.triggerUploadFile}>Upload</button>

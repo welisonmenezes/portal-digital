@@ -172,6 +172,7 @@ class UserForm extends Component {
                     if (data.id) {
                         if (this.state.mode === 'add') {
                             document.getElementById('userForm').reset();
+                            document.querySelector('.file-upload-info').setAttribute('value','');
                             this.resetUserState();
                         }
                         this.setState({ successMessage: 'Usuário salvo com sucesso' });

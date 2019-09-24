@@ -17,7 +17,7 @@ class Pagination extends Component {
 
     render() {
         return (
-            <div className="Pagination table-pagination">
+            <div className="Pagination table-pagination text-right">
                 {(this.props.pagination && this.props.pagination != null) &&
                     <div>
                         {(this.props.pagination.next_num != null || this.props.pagination.prev_num != null) &&
