@@ -2,20 +2,20 @@ import React, { Component } from "react";
 
 class Pagination extends Component {
 
-    componentDidMount() {
-
-    }
+    componentDidMount() { }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.currentPage !== this.props.currentPage) { }
     }
 
     doPaginate = (page) => {
+        if (page === parseInt(this.props.currentPage, 10)) {
+            return false;
+        }
         this.props.doPaginate(page);
     }
 
     render() {
-        console.log(this.props)
         return (
             <div className="Pagination table-pagination">
                 {(this.props.pagination && this.props.pagination != null) &&
@@ -23,7 +23,6 @@ class Pagination extends Component {
                         {this.props.pagination.pages.map(page => {
                             if (page) {
                                 return (
-
                                     <button key={page} type="button" className={(parseInt(this.props.currentPage, 10) === page) ? "btn btn-primary active" : "btn btn-primary"} onClick={() => { this.doPaginate(page) }}>{page}</button>
                                 );
                             } else {

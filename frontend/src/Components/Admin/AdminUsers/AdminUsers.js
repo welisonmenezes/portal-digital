@@ -68,9 +68,6 @@ class AdminUsers extends Component {
 	}
 
 	doPaginate = (page) => {
-		if (page === this.state.page) {
-			return false;
-		}
 		const searchParams = new URLSearchParams(this.props.location.search);
 		searchParams.set('page', page);
 		this.props.history.push({
@@ -94,17 +91,14 @@ class AdminUsers extends Component {
 			this.setState({page, loadDataError: ''});
 			setTimeout(() => {
 				this.getUsers();
-			}, 50);
+			}, 1);
 		}
 	}
 
 	render() {
-		//console.log(this.state.pagination)
 		return (
 			<div className="AdminUsers">
-				{this.state.redirect &&
-					<Redirect to='/login' />
-				}
+				{this.state.redirect && <Redirect to='/login' />}
 				{this.state.loadDataError &&
 					<div className="row">
 						<div className="col-md-12">
@@ -120,9 +114,7 @@ class AdminUsers extends Component {
 									<h4 className="card-title">Lista de Usuários</h4>
 									<FilterUsers />
 									<div className="table-responsive">
-										{this.state.isLoadingData &&
-											<Spinner />
-										}
+										{this.state.isLoadingData && <Spinner />}
 										<table className="table table-striped">
 											<thead>
 												<tr>

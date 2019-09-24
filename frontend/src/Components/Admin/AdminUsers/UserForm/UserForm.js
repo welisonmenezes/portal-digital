@@ -37,7 +37,6 @@ class UserForm extends Component {
                 title: 'Adicionar Usuário',
                 mode: 'add'
             });
-
         } else if (regUsers.test(this.props.location.pathname)) {
             this.setState({
                 title: 'Editar Usuário',
@@ -71,13 +70,9 @@ class UserForm extends Component {
                 if (data.id) {
                     this.fillFormData(data);
                 } else {
-                    this.setState({
-                        loadDataError: data.message
-                    })
+                    this.setState({ loadDataError: data.message })
                 }
-                this.setState({
-                    isLoadingData: false
-                })
+                this.setState({ isLoadingData: false })
             })
             .catch(error => {
                 console.log('getUser: ', error);
@@ -140,9 +135,11 @@ class UserForm extends Component {
     }
 
     saveUser = () => {
-        this.setState({ isLoading: true });
-        this.setState({ errorMessage: null });
-        this.setState({ successMessage: null });
+        this.setState({
+            isLoading: true,
+            errorMessage: null,
+            successMessage: null
+        });
         const path = (this.state.mode === 'add') ? '/api/user' : '/api/user/' + this.state.user_id;
         fetch(`${process.env.REACT_APP_BASE_URL}${path}`, this.getRequestInfos())
             .then(res => {
@@ -170,8 +167,10 @@ class UserForm extends Component {
             .catch(error => {
                 console.log('saveUser: ', error);
                 window.scrollTo(0, 0);
-                this.setState({ errorMessage: 'Ocorreu um problema ao conectar com o servidor' });
-                this.setState({ isLoading: false });
+                this.setState({
+                    errorMessage: 'Ocorreu um problema ao conectar com o servidor',
+                    isLoading: false
+                });
             });
     }
 
@@ -184,24 +183,18 @@ class UserForm extends Component {
     }
 
     getUploadButtonState = (uploadButtonState) => {
-        this.setState({image_id: uploadButtonState.imageId});
+        this.setState({ image_id: uploadButtonState.imageId });
     }
 
     removeImage = () => {
-        this.setState({
-            image_id: ''
-        })
+        this.setState({ image_id: '' });
     }
 
     render() {
         return (
             <div className="UserForm">
-                {this.state.redirect &&
-                    <Redirect to='/login' />
-                }
-                {this.state.isLoadingData &&
-                    <Spinner />
-                }
+                {this.state.redirect && <Redirect to='/login' />}
+                {this.state.isLoadingData && <Spinner />}
                 {this.state.loadDataError &&
                     <div className="row">
                         <div className="col-md-6">
@@ -264,7 +257,7 @@ class UserForm extends Component {
                                             <div className="form-group">
                                                 <figure className="previewImage">
                                                     <i className="mdi mdi-close-circle" onClick={this.removeImage}></i>
-                                                    <img src={process.env.REACT_APP_BASE_URL+'/api/media/'+this.state.image_id} alt="User Avatar" />
+                                                    <img src={process.env.REACT_APP_BASE_URL + '/api/media/' + this.state.image_id} alt="User Avatar" />
                                                 </figure>
                                             </div>
                                         }
@@ -278,10 +271,8 @@ class UserForm extends Component {
                                                 }
                                             </div>
                                         }
-                                        {this.state.isLoading &&
-                                            <Spinner />
-                                        }
-                                        <button type="button" className="btn btn-light" onClick={() => {history.back()}}>Cancelar</button>
+                                        {this.state.isLoading && <Spinner />}
+                                        <button type="button" className="btn btn-light" onClick={() => { history.back() }}>Cancelar</button>
                                     </form>
                                 </div>
                             </div>
