@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import InputMask from 'react-input-mask';
 import Spinner from '../../../Shared/Spinner/Spinner';
 import UploadButton from '../../Shared/UploadButton/UploadButton';
 
@@ -246,7 +247,7 @@ class UserForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Matrícula</label>
-                                            <input type="text" name="registry" className="form-control" placeholder="Matrícula" onChange={this.updateInputValue} value={this.state.registry} />
+                                            <InputMask mask="999999" maskChar="" name="registry" className="form-control" placeholder="Matrícula" onChange={this.updateInputValue} value={this.state.registry} />
                                         </div>
                                         <div className="form-group">
                                             <label>Email</label>
@@ -254,7 +255,7 @@ class UserForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Telefone</label>
-                                            <input type="text" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} value={this.state.phone} />
+                                            <InputMask mask="(99) 9999-99999" maskChar="" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} value={this.state.phone} />
                                         </div>
                                         <div className="form-group">
                                             <label>Senha</label>
