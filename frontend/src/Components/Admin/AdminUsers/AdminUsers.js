@@ -169,7 +169,9 @@ class AdminUsers extends Component {
 															<Link to={'/admin/usuarios/' + user.id}>
 																<i className="mdi mdi-border-color edit"></i>
 															</Link>
-															<i className="mdi mdi-delete-forever delete"></i>
+															<Link to={'/admin/usuarios/deletar/' + user.id}>
+																<i className="mdi mdi-delete-forever delete"></i>
+															</Link>
 														</td>
 													</tr>)
 												})}
