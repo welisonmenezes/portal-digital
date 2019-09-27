@@ -1,6 +1,7 @@
 from flask import  request
 from flask_restful import Resource
 
+from api.Validations.Auth import hasPermissionByToken
 from api.Model import db, Configuration, ConfigurationSchema, Image
 from api.Validations.ConfigurationValidations import ConfigurationValidation
 
@@ -14,12 +15,12 @@ class ConfigurationResource(Resource):
         return {'message': 'Dados ainda não cadastrados'}, 404
 
 
-
+    @hasPermissionByToken(['admin'], False, 'Configuration')
     def post(self):
         return manageConfiguration()
         
 
-
+    @hasPermissionByToken(['admin'], False, 'Configuration')
     def put(self):
         return manageConfiguration()
 
