@@ -12,8 +12,6 @@ class FilterUsers extends Component {
         };
     }
 
-    componentDidMount() {}
-
     doFilter = () => {
         this.props.doFilter(this.state.name, this.state.role);
     }

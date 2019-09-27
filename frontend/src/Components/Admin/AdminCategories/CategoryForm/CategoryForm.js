@@ -235,5 +235,4 @@ class CategoryForm extends Component {
     }
 }
 
-
 export default CategoryForm;
