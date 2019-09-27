@@ -27,7 +27,8 @@ class UserForm extends Component {
             role: '',
             email: '',
             phone: '',
-            image_id: ''
+            image_id: '',
+            redirect: false
         };
     }
 
