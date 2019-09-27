@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Spinner from '../../Shared/Spinner/Spinner';
 
-import image from '../../../source/img/banner-1.jpg'
+import './ConfigurationForm.css';
+import UploadButton from '../Shared/UploadButton/UploadButton';
 
 class ConfigurationForm extends Component {
 
@@ -20,8 +21,8 @@ class ConfigurationForm extends Component {
             name: '',
             phone: '',
             email: '',
-            new_images: '',
-            old_images: '',
+            new_images: [],
+            old_images: [],
             redirect: false
         };
     }
@@ -51,8 +52,17 @@ class ConfigurationForm extends Component {
             })
             .then(data => {
                 if (this._isMounted) {
+                    console.log(data)
                     if (data.id) {
                         this.fillFormData(data);
+                        if (data.images) {
+                            data.images.map(image => {
+                                this.state.new_images.push(image.id);
+                                this.state.old_images.push(image.id);
+                                return image;
+                            });
+                            //this.setState({new_images: data.images, old_images: data.images});
+                        }
                     } else {
                         this.setState({ loadDataError: data.message });
                     }
@@ -145,6 +155,23 @@ class ConfigurationForm extends Component {
         this.setState(obj);
     }
 
+    getUploadButtonState = (uploadButtonState) => {
+        if (uploadButtonState && uploadButtonState.imageId) {
+            const newImages = [...this.state.new_images];
+            newImages.push(uploadButtonState.imageId);
+            this.setState({ new_images: newImages });
+        }
+    }
+
+    removeImage = (imageId) => {
+        const newImages = [...this.state.new_images];
+        const index = newImages.indexOf(imageId);
+        if (index > -1) {
+            newImages.splice(index, 1);
+            this.setState({ new_images: newImages });
+        }
+    }
+
     render() {
         return (
             <div className="ConfigurationForm">
@@ -159,107 +186,89 @@ class ConfigurationForm extends Component {
                     </div>
                 }
                 {(!this.state.isLoadingData && !this.state.loadDataError) &&
-                    <div className="row">
+                    <dvi>
+                        <div className="row">
 
-                        <div className="col-md-6 grid-margin stretch-card">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h4 className="card-title">Configurações do Site</h4>
-                                    {this.state.errorMessage &&
-                                        <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
-                                    }
-                                    {this.state.successMessage &&
-                                        <div className="alert alert-success" role="alert">{this.state.successMessage}</div>
-                                    }
-                                    <form className="forms-sample">
-                                        <div className="form-group">
-                                            <label>Título do Site</label>
-                                            <input type="text" name="name" className="form-control" placeholder="Título do Site" onChange={this.updateInputValue} value={this.state.name} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Descrição do Site</label>
-                                            <input type="text" className="form-control" placeholder="Descrição do Site" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Telefone</label>
-                                            <input type="text" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} value={this.state.phone} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Email</label>
-                                            <input type="email" name="email" className="form-control" placeholder="Email" onChange={this.updateInputValue} value={this.state.email} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Endereço</label>
-                                            <input type="text" className="form-control" placeholder="Endereço" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Horários</label>
-                                            <input type="password" className="form-control" placeholder="Horários" />
-                                        </div>
+                            <div className="col-md-6 grid-margin stretch-card">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h4 className="card-title">Configurações do Site</h4>
+                                        {this.state.errorMessage &&
+                                            <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+                                        }
+                                        {this.state.successMessage &&
+                                            <div className="alert alert-success" role="alert">{this.state.successMessage}</div>
+                                        }
+                                        <form className="forms-sample">
+                                            <div className="form-group">
+                                                <label>Título do Site</label>
+                                                <input type="text" name="name" className="form-control" placeholder="Título do Site" onChange={this.updateInputValue} value={this.state.name} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Descrição do Site</label>
+                                                <input type="text" className="form-control" placeholder="Descrição do Site" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Telefone</label>
+                                                <input type="text" name="phone" className="form-control" placeholder="Telefone" onChange={this.updateInputValue} value={this.state.phone} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Email</label>
+                                                <input type="email" name="email" className="form-control" placeholder="Email" onChange={this.updateInputValue} value={this.state.email} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Endereço</label>
+                                                <input type="text" className="form-control" placeholder="Endereço" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Horários</label>
+                                                <input type="password" className="form-control" placeholder="Horários" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-6 grid-margin stretch-card">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h4 className="card-title">Imagens do banner</h4>
+                                        <form className="forms-sample">
+                                            <div className="form-group">
+                                                <label>Adicionar Imagem</label>
+                                                <UploadButton getUploadButtonState={this.getUploadButtonState} />
+                                            </div>
+                                        </form>
+                                        <ul className="ul-fig-banner">
+                                            {this.state.new_images.map(image => {
+                                                return (<li key={image}>
+                                                    <figure className="fig-banner">
+                                                        <i className="mdi mdi-close-circle" onClick={() => { this.removeImage(image) }}></i>
+                                                        <img src={process.env.REACT_APP_BASE_URL + '/api/media/' + image} alt="banner" />
+                                                    </figure>
+                                                </li>)
+                                            })}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="row">
+                            <div className="col-md-12 grid-margin stretch-card text-center">
+                                <div className="card">
+                                    <div className="card-body">
                                         {!this.state.isLoading &&
                                             <button type="submit" className="btn btn-primary mr-2" onClick={(evt) => this.saveConfiguration(evt)}>Salvar</button>
                                         }
                                         {this.state.isLoading && <Spinner />}
                                         <button type="button" className="btn btn-light" onClick={() => { history.back() }}>Cancelar</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 grid-margin stretch-card">
-                            <div className="card">
-                                <div className="card-body">
-                                    <h4 className="card-title">Imagens do banner</h4>
-                                    <form className="forms-sample">
-                                        <div className="form-group">
-                                            <label>Adicionar Imagem</label>
-                                            <input type="file" name="img[]" className="file-upload-default" />
-                                            <div className="input-group">
-                                                <input type="text" className="form-control file-upload-info"
-                                                    placeholder="Upload Image" />
-                                                <span className="input-group-append">
-                                                    <button className="file-upload-browse btn btn-primary"
-                                                        type="button">Upload</button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <ul className="ul-fig-banner">
-                                        <li>
-                                            <figure className="fig-banner">
-                                                <i className="mdi mdi-close-circle"></i>
-                                                <img src={image} alt="banner 1" />
-                                            </figure>
-                                        </li>
-                                        <li>
-                                            <figure className="fig-banner">
-                                                <i className="mdi mdi-close-circle"></i>
-                                                <img src={image} alt="banner 2" />
-                                            </figure>
-                                        </li>
-                                        <li>
-                                            <figure className="fig-banner">
-                                                <i className="mdi mdi-close-circle"></i>
-                                                <img src={image} alt="banner 3" />
-                                            </figure>
-                                        </li>
-                                        <li>
-                                            <figure className="fig-banner">
-                                                <i className="mdi mdi-close-circle"></i>
-                                                <img src={image} alt="banner 4" />
-                                            </figure>
-                                        </li>
-                                        <li>
-                                            <figure className="fig-banner">
-                                                <i className="mdi mdi-close-circle"></i>
-                                                <img src={image} alt="banner 5" />
-                                            </figure>
-                                        </li>
-                                    </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                    </div>
+                    </dvi>
                 }
             </div>
         );
