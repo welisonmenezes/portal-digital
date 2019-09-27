@@ -52,7 +52,6 @@ class ConfigurationForm extends Component {
             })
             .then(data => {
                 if (this._isMounted) {
-                    console.log(data)
                     if (data.id) {
                         this.fillFormData(data);
                         if (data.images) {
@@ -61,7 +60,6 @@ class ConfigurationForm extends Component {
                                 this.state.old_images.push(image.id);
                                 return image;
                             });
-                            //this.setState({new_images: data.images, old_images: data.images});
                         }
                     } else {
                         this.setState({ loadDataError: data.message });
@@ -186,7 +184,7 @@ class ConfigurationForm extends Component {
                     </div>
                 }
                 {(!this.state.isLoadingData && !this.state.loadDataError) &&
-                    <dvi>
+                    <div>
                         <div className="row">
 
                             <div className="col-md-6 grid-margin stretch-card">
@@ -268,7 +266,7 @@ class ConfigurationForm extends Component {
                             </div>
                         </div>
 
-                    </dvi>
+                    </div>
                 }
             </div>
         );
