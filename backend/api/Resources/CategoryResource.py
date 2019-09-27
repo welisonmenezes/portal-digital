@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource, reqparse
+from sqlalchemy import desc
 from api.Model import db, Category, CategorySchema, Post
 from api.Validations.Auth import hasPermissionByToken
 from api.Validations.MustHaveId import mustHaveId
@@ -24,7 +25,7 @@ class CategoryResource(Resource):
             filter = filter + (Category.name.like('%'+filterName+'%'),)
 
         category_schema = CategorySchema(many=True)
-        paginate = Category.query.filter(*filter).paginate(page=page, per_page=1, error_out=False)
+        paginate = Category.query.filter(*filter).order_by(desc(Category.id)).paginate(page=page, per_page=1, error_out=False)
         categories = paginate.items
         categories = category_schema.dump(categories)
 

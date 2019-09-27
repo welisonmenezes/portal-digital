@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import './UserDelete.css';
+import './CategoryDelete.css';
 import Spinner from '../../../Shared/Spinner/Spinner';
 
-class UserDelete extends Component {
+class CategoryDelete extends Component {
 
     _isMounted = false;
 
@@ -14,26 +14,26 @@ class UserDelete extends Component {
             isLoading: false,
             errorMessage: null,
             successMessage: null,
-            user_id: ''
+            category_id: ''
         };
     }
 
     componentDidMount() {
         this._isMounted = true;
-        this.setState({ user_id: this.props.match.params.id });
+        this.setState({ category_id: this.props.match.params.id });
     }
 
     componentWillUnmount() {
         this._isMounted = false;
     }
 
-    deleteUser = () => {
+    deleteCategory = () => {
         this.setState({
             isLoading: true,
             errorMessage: null,
             successMessage: null
         });
-        const path = '/api/user/' + this.state.user_id;
+        const path = '/api/category/' + this.state.category_id;
         fetch(`${process.env.REACT_APP_BASE_URL}${path}`, {
             method: 'DELETE',
             headers: {
@@ -57,7 +57,7 @@ class UserDelete extends Component {
                 if (this._isMounted) {
                     window.scrollTo(0, 0);
                     if (data.id) {
-                        this.setState({ successMessage: 'Usuário deletado com sucesso' });
+                        this.setState({ successMessage: 'Categoria deletada com sucesso' });
                     } else if (data.message) {
                         this.setState({ errorMessage: data.message });
                     }
@@ -66,7 +66,7 @@ class UserDelete extends Component {
             })
             .catch(error => {
                 if (this._isMounted) {
-                    console.log('deleteUser: ', error);
+                    console.log('deleteCategory: ', error);
                     window.scrollTo(0, 0);
                     this.setState({
                         errorMessage: 'Ocorreu um problema ao conectar com o servidor',
@@ -78,7 +78,7 @@ class UserDelete extends Component {
 
     render() {
         return (
-            <div className="UserDelete">
+            <div className="CategoryDelete">
                 {this.state.redirect && <Redirect to='/login' />}
                 {this.state.errorMessage &&
                     <div className="row">
@@ -98,12 +98,12 @@ class UserDelete extends Component {
                 {!this.state.successMessage &&
                     <div className="row">
                         <div className="col-md-6">
-                            <h4>Deseja realmente deletar o usuário {this.state.user_id}?</h4>
+                            <h4>Deseja realmente deletar a categoria {this.state.category_id}?</h4>
                             <hr />
                             {this.state.isLoading && <Spinner />}
                             {!this.state.isLoading &&
                                 <div>
-                                    <button type="button" className="btn btn-danger" onClick={(evt) => this.deleteUser(evt)}>Excluir</button>
+                                    <button type="button" className="btn btn-danger" onClick={(evt) => this.deleteCategory(evt)}>Excluir</button>
                                     <button type="button" className="btn btn-secondary" title="Cancelar" onClick={() => { history.back() }}>Cancelar</button>
                                 </div>
                             }
@@ -115,4 +115,4 @@ class UserDelete extends Component {
     }
 }
 
-export default UserDelete;
+export default CategoryDelete;

@@ -25,6 +25,7 @@ import './Admin.css';
 import AdminCategories from './AdminCategories/AdminCategories';
 import CategoryForm from './AdminCategories/CategoryForm/CategoryForm';
 import UserDelete from './AdminUsers/UserDelete/UserDelete';
+import CategoryDelete from './AdminCategories/CategoryDelete/CategoryDelete';
 
 class Admin extends Component {
 
@@ -62,6 +63,7 @@ class Admin extends Component {
                                             <PrivateRouter path='/admin/categorias' exact={true} component={AdminCategories} permissions={['admin']} />
                                             <PrivateRouter path='/admin/categorias/add' exact={true} component={CategoryForm} permissions={['admin']} />
                                             <PrivateRouter path='/admin/categorias/:id' exact={true} component={CategoryForm} permissions={['admin']} />
+                                            <PrivateRouter path='/admin/categorias/deletar/:id' exact={true} component={CategoryDelete} permissions={['admin']} />
 
                                             <PrivateRouter path='/admin/configuracoes' exact={true} component={ConfigurationForm} permissions={['admin']} />
 
