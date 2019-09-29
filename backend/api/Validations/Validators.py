@@ -27,6 +27,12 @@ class Validators():
                 if not self.validateUnique(field[0], field[1]):
                     return False
                     break
+
+            # verifica datas
+            if self.dateCompareFields:
+                if not self.compareDates(self.dateCompareFields):
+                    return False
+
         # se é update
         else:
             # percorre campos obrigatórios
@@ -40,6 +46,11 @@ class Validators():
                 if not self.validateUniqueToUpdate(field[0], field[1], currentResult):
                     return False
                     break
+
+            # verifica datas
+            if self.dateCompareFields:
+                if not self.compareDatesToUpdate(self.dateCompareFields, currentResult):
+                    return False
         
         # percorre campos numéricos
         for field in self.numberFields:
@@ -64,11 +75,6 @@ class Validators():
             if not self.validateDate(field):
                 return False
                 break
-        
-        # verifica datas
-        if self.dateCompareFields:
-            if not self.compareDates(self.dateCompareFields):
-                return False
         
         # percorre campos de imagem
         for field in self.imageFields:
@@ -198,6 +204,39 @@ class Validators():
             else:
                 self.response = { 'message': 'O entry_date deve ser maior ou igual a data de hoje' }, 501
                 return False
+        except:
+            self.response = { 'message': 'O formato de uma das datas é inválido' }, 501
+            return False
+
+    
+    # vefifica se a data do index 0 é menor que a data do index 1 e é maior ou igual a data corrente
+    def compareDatesToUpdate(self, dates, currentResult):
+        try:
+            today = date.today().strftime('%d/%m/%Y')
+            t_day,t_month,t_year = today.split('/')
+            t_date = datetime.datetime(int(t_year), int(t_month), int(t_day))
+            entry = self.req[dates[0]]
+            e_year,e_month,e_day = entry.split('-')
+            e_date = datetime.datetime(int(e_year), int(e_month), int(e_day)) 
+            departure = self.req[dates[1]]
+            d_year,d_month,d_day = departure.split('-')
+            d_date = datetime.datetime(int(d_year), int(d_month), int(d_day))
+            if (str(currentResult.entry_date) != str(entry)):
+                if e_date >= t_date:
+                    if e_date < d_date:
+                        return True
+                    else:
+                        self.response = { 'message': 'O entry_date deve ser menor que o departure_date' }, 501
+                        return False
+                else:
+                    self.response = { 'message': 'O entry_date deve ser maior ou igual a data de hoje' }, 501
+                    return False
+            else:
+                if e_date < d_date:
+                    return True
+                else:
+                    self.response = { 'message': 'O entry_date deve ser menor que o departure_date' }, 501
+                    return False
         except:
             self.response = { 'message': 'O formato de uma das datas é inválido' }, 501
             return False
