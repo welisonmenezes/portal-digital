@@ -217,8 +217,6 @@ class PostForm extends Component {
             return false;
         }
         setTimeout(() => {
-            console.log(this.state);
-            //*
             this.setState({
                 isLoading: true,
                 errorMessage: null,
@@ -263,7 +261,6 @@ class PostForm extends Component {
                         });
                     }
                 });
-            //*/
         }, 10);
     }
 

@@ -155,7 +155,9 @@ class RichEditor extends Component {
 
     handleEditorChange(value) {
         this.setState({ text: value });
-        this.props.parentGettingTheEditorValue(this.state.text);
+        setTimeout(() => {
+            this.props.parentGettingTheEditorValue(this.state.text);
+        }, 1);
     }
 
     handleChange(e) {
