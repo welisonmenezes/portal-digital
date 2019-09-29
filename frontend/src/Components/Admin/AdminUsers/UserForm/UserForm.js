@@ -35,6 +35,14 @@ class UserForm extends Component {
     componentDidMount() {
         this._isMounted = true;
         window.scrollTo(0, 0);
+        this.definePageMode();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    definePageMode() {
         this.setState({ currentPath: this.props.location.pathname });
         const regUsers = /admin\/usuarios\/[0-9]/g;
         if (this.props.location.pathname === '/admin/usuarios/add') {
@@ -51,10 +59,6 @@ class UserForm extends Component {
             });
             this.getUser();
         }
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     getUser() {
@@ -149,7 +153,8 @@ class UserForm extends Component {
         };
     }
 
-    saveUser = () => {
+    saveUser = (evt) => {
+        evt.preventDefault();
         this.setState({
             isLoading: true,
             errorMessage: null,
@@ -274,7 +279,7 @@ class UserForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Avatar</label>
-                                            <UploadButton getUploadButtonState={this.getUploadButtonState} />
+                                            <UploadButton getUploadButtonState={this.getUploadButtonState} id="AvatarImage" />
                                         </div>
                                         {this.state.image_id &&
                                             <div className="form-group">

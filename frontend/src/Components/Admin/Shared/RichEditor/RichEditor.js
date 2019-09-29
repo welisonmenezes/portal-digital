@@ -247,7 +247,7 @@ class RichEditor extends Component {
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label>Selecione uma imagem:</label>
-                                    <UploadButton getUploadButtonState={this.getUploadButtonState} />
+                                    <UploadButton getUploadButtonState={this.getUploadButtonState} id="EditorImage" />
                                 </div>
                                 <div className="form-group">
                                     {(this.state.currentImage) &&

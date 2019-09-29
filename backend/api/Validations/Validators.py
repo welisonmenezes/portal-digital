@@ -1,5 +1,6 @@
 import re
-from datetime import date, datetime
+from datetime import date
+import datetime
 from api.Utils import getBase64Size
 
 class Validators():

@@ -21,8 +21,8 @@ class UploadButton extends Component {
             imageId: ''
         });
         this.sendStateToParentComponent();
-        const element = document.querySelector('.UploadButton input');
-        const uploadInfo = document.querySelector('.file-upload-info');
+        const element = document.querySelector('#' + this.props.id + ' input');
+        const uploadInfo = document.querySelector('#' + this.props.id + ' .file-upload-info');
         uploadInfo.value = '';
         const file = element.files[0];
         if (file && file.name) {
@@ -90,8 +90,8 @@ class UploadButton extends Component {
         }
     }
 
-    triggerUploadFile() {
-        document.querySelector('.UploadButton input').click();
+    triggerUploadFile = () => {
+        document.querySelector('#' + this.props.id + ' input').click();
     }
 
     sendStateToParentComponent(value) {
@@ -100,7 +100,7 @@ class UploadButton extends Component {
 
     render() {
         return (
-            <div className="UploadButton">
+            <div className="UploadButton" id={this.props.id}>
                 <input type="file" name="files" className="file-upload-default" id="RichEditorInputFile" accept=".jpg,.jpeg,.png,.gif" onChange={this.handleUploadImage} />
                 <div className="input-group">
                     <input type="text" className="form-control file-upload-info" placeholder="Upload Image" disabled />

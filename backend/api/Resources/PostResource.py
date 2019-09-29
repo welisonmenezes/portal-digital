@@ -75,7 +75,7 @@ class PostResource(Resource):
 
 
 
-    @hasPermissionByToken(['admin'], None, 'Post')
+    #@hasPermissionByToken(['admin'], None, 'Post')
     def post(self):
         json_data = request.get_json()
         if json_data:
