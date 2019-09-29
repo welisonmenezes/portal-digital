@@ -199,7 +199,9 @@ class AdminPosts extends Component {
 															<Link to={'/admin/' + this.state.type + '/' + post.id}>
 																<i className="mdi mdi-border-color edit"></i>
 															</Link>
-															<i className="mdi mdi-delete-forever delete"></i>
+															<Link to={'/admin/post/deletar/' + post.id}>
+																<i className="mdi mdi-delete-forever delete"></i>
+															</Link>
 														</td>
 													</tr>)
 												}) }
