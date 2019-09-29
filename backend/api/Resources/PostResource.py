@@ -12,7 +12,7 @@ class PostResource(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('page', type=int)
-        parser.add_argument('category', type=int)
+        parser.add_argument('category')
         parser.add_argument('type')
         parser.add_argument('date')
         parser.add_argument('s')
@@ -75,7 +75,7 @@ class PostResource(Resource):
 
 
 
-    #@hasPermissionByToken(['admin'], None, 'Post')
+    @hasPermissionByToken(['admin'], None, 'Post')
     def post(self):
         json_data = request.get_json()
         if json_data:

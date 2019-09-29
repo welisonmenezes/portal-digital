@@ -3,6 +3,27 @@ import React, { Component } from "react";
 import './FilterPosts.css';
 
 class FilterPosts extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            search: '',
+            category: ''
+        };
+    }
+
+    doFilter = () => {
+        this.props.doFilter(this.state.search, this.state.category);
+    }
+
+    updateInputValue = (evt) => {
+        const name = evt.target.getAttribute('name');
+        const value = evt.target.value;
+        const obj = {};
+        obj[name] = value;
+        this.setState(obj);
+    }
+
     render() {
         return (
             <div className="FilterPosts">
@@ -15,14 +36,16 @@ class FilterPosts extends Component {
                             <div className="form-group">
                                 <input
                                     type="text"
+                                    name="search"
                                     className="form-control form-control-sm"
                                     placeholder="Palavra chave"
+                                    onChange={this.updateInputValue}
                                 />
                             </div>
                         </div>
                         <div className="col-md-3">
                             <div className="form-group">
-                                <select className="form-control form-control-sm">
+                                <select name="category" className="form-control form-control-sm" onChange={this.updateInputValue}>
                                     <option value="">Categoria</option>
                                     <option value="1">
                                         Sistemas de Informação
@@ -33,7 +56,7 @@ class FilterPosts extends Component {
                             </div>
                         </div>
                         <div className="col-md-2">
-                            <button type="button" className="btn btn-primary btn-sm btn-block">
+                            <button type="button" className="btn btn-primary btn-sm btn-block" onClick={() => { this.doFilter() }}>
                                 Filtrar
                             </button>
                         </div>
