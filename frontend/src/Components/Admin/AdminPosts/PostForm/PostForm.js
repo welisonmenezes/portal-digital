@@ -32,6 +32,7 @@ class PostForm extends Component {
             departure_date: '',
             image_id: '',
             caegory_id: '',
+            user_id: '',
             redirect: false
         };
     }
@@ -78,27 +79,33 @@ class PostForm extends Component {
                     this.setState({
                         page_title: 'Editar Notícia',
                         genre: 'news',
-                        mode: 'edit'
+                        mode: 'edit',
+                        post_id: this.props.match.params.id
                     });
+                    this.getPost();
                 } else if (regAds.test(this.props.location.pathname)) {
                     this.setState({
                         page_title: 'Editar Anúncio',
                         genre: 'ads',
-                        mode: 'edit'
+                        mode: 'edit',
+                        post_id: this.props.match.params.id
                     });
+                    this.getPost();
                 } else if (regNovices.test(this.props.location.pathname)) {
                     this.setState({
                         page_title: 'Editar Aviso',
                         genre: 'novice',
-                        mode: 'edit'
+                        mode: 'edit',
+                        post_id: this.props.match.params.id
                     });
+                    this.getPost();
                 }
                 break;
         }
     }
 
-    getUser() {
-        fetch(`${process.env.REACT_APP_BASE_URL}/api/user/${this.props.match.params.id}`, {
+    getPost() {
+        fetch(`${process.env.REACT_APP_BASE_URL}/api/post/${this.props.match.params.id}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -120,7 +127,11 @@ class PostForm extends Component {
             .then(data => {
                 if (this._isMounted) {
                     if (data.id) {
-                        this.fillFormData(data);
+                        if (data.genre === this.state.genre) {
+                            this.fillFormData(data);
+                        } else {
+                            this.setState({ loadDataError: 'Post não encontrado' });
+                        }
                     } else {
                         this.setState({ loadDataError: data.message });
                     }
@@ -140,14 +151,18 @@ class PostForm extends Component {
 
     fillFormData(data) {
         this.setState({
-            first_name: data.first_name,
-            last_name: data.last_name,
-            registry: data.registry,
-            role: data.role,
-            email: data.email,
-            phone: data.phone,
-            image_id: (data.image_id !== null) ? data.image_id : ''
+            title: data.title,
+            description: data.description,
+            content: data.content,
+            genre: data.genre,
+            status: data.status,
+            user_id: data.user_id,
+            category_id: (data.category_id !== null) ? data.category_id : '',
+            image_id: (data.image_id !== null) ? data.image_id : '',
+            entry_date: data.entry_date,
+            departure_date: data.departure_date
         });
+        this.formatDateToView();
     }
 
     resetPostState() {
@@ -191,7 +206,7 @@ class PostForm extends Component {
                 'entry_date': this.state.entry_date,
                 'departure_date': this.state.departure_date,
                 'image_id': this.state.image_id,
-                'category_id': this.state.caegory_id
+                'category_id': this.state.category_id
             })
         };
     }
@@ -202,7 +217,8 @@ class PostForm extends Component {
             return false;
         }
         setTimeout(() => {
-            console.log(this.state)
+            console.log(this.state);
+            //*
             this.setState({
                 isLoading: true,
                 errorMessage: null,
@@ -247,12 +263,13 @@ class PostForm extends Component {
                         });
                     }
                 });
+            //*/
         }, 10);
     }
 
     validateAndFormatDate() {
         this.setState({ errorMessage: '' });
-        const regDate = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+        const regDate = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
         if (this.state.tmp_entry_date && this.state.tmp_entry_date.match(regDate)) {
             const arrEntryDate = this.state.tmp_entry_date.split('/');
             const newEntryDate = arrEntryDate[2] + '-' + arrEntryDate[1] + '-' + arrEntryDate[0];
@@ -272,6 +289,20 @@ class PostForm extends Component {
             return false;
         }
         return true;
+    }
+
+    formatDateToView() {
+        const regDate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+        if (this.state.entry_date && this.state.entry_date.match(regDate)) {
+            const arrEntryDate = this.state.entry_date.split('-');
+            const newEntryDate = arrEntryDate[2] + '/' + arrEntryDate[1] + '/' + arrEntryDate[0];
+            this.setState({tmp_entry_date: newEntryDate});
+        }
+        if (this.state.departure_date && this.state.departure_date.match(regDate)) {
+            const arrDepartureDate = this.state.departure_date.split('-');
+            const newDepartureDate = arrDepartureDate[2] + '/' + arrDepartureDate[1] + '/' + arrDepartureDate[0];
+            this.setState({tmp_departure_date: newDepartureDate});
+        }
     }
 
     updateInputValue = (evt) => {
@@ -330,7 +361,7 @@ class PostForm extends Component {
                                         </div>
                                         <div className="form-group">
                                             <label>Conteúdo</label>
-                                            <RichEditor parentGettingTheEditorValue={this.getEditorValue}></RichEditor>
+                                            <RichEditor parentGettingTheEditorValue={this.getEditorValue} text={this.state.content}></RichEditor>
                                         </div>
                                         <div className="form-group">
                                             <label>Imagem de Destaque</label>

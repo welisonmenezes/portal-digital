@@ -72,11 +72,16 @@ class RichEditor extends Component {
     }
 
     componentDidMount() {
-        this.attachQuillRefs()
+        this.attachQuillRefs();
+        this.setState({ text: this.props.text })
     }
 
     componentDidUpdate() {
-        this.attachQuillRefs()
+        this.attachQuillRefs();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ text: nextProps.text });
     }
 
     attachQuillRefs = () => {
@@ -257,7 +262,7 @@ class RichEditor extends Component {
                                         <p>Enviado...</p>
                                     }
                                     {(this.state.uploadError) &&
-                                        <p>{ this.state.uploadError }</p>
+                                        <p>{this.state.uploadError}</p>
                                     }
                                 </div>
                             </div>
